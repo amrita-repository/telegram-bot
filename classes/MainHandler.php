@@ -36,8 +36,8 @@ class MainHandler
             } else if (strtolower($message) == "logs") {
                 if ($from == MASTER_ID) {
                     $keyboard = new InlineKeyboardMarkup([[
-                        ['text' => 'Access', 'url' => 'https://bygone-grass.000webhostapp.com/access.log'],
-                        ['text' => 'Errors', 'url' => 'https://bygone-grass.000webhostapp.com/error.log']
+                        ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/access.log"],
+                        ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/error.log"]
                     ]]);
                     $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, $keyboard);
                 } else {

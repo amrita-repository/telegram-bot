@@ -30,6 +30,8 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 }
 ```
 - Tadaa! You'll get the response to your Telegram ^_^
+- Make your awesome changes, push your changes into a **new branch**.
+- Send in a pull-request :)
 
 ## Misc. Info
 - If you run this on your system, question papers module won't work unless you're in Amrita LAN. As a workaround, you can use [SonicWall NetExtender](https://www.mysonicwall.com/muir/freedownloads) (Make sure you choose **`NetExtender`** in the dropdown before downloading) and create a connection using the below details :

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
+ */
 
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;

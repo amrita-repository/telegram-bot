@@ -16,7 +16,7 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 - Copy `config.example.php` and paste it as `config.php` and fill in necessary stuff.
 - Run a `composer install` to fetch all dependencies.
 - Run `php -S 0.0.0.0:2304` to start the web server.
-- Use an API testing tool like [Postman](https://postman.com) and send the request to `http://localhost:2304/index.php` with the sample body :
+- Use an API testing tool like [Postman](https://postman.com) and send the request to `http://localhost:2304/<YOUR_API_KEY>` with the sample body 
 ```json
 {
   "message" : {

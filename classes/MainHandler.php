@@ -74,8 +74,7 @@ class MainHandler
         $start .= "\n1) /actimetable - Academic Timetable for students of all departments";
         $start .= "\n\n2) /qpapersc - Previous year question papers for all the departments";
         $start .= "\n\n3) /ft - Get the timetable of any faculty in the campus";
-        $start .= "\n\n4) /tim - Get the timings of public transport around (or) shuttle buses inside the campus";
-        $start .= "\n\n5) /news - Get fastest news capsules regarding our university";
+        $start .= "\n\n4) /news - Get fastest news capsules regarding our university";
         $start .= "\n\nDeveloped with ❤ by @rajkumaar23 \n\n`I'm still on beta testing, please report to my developer if I go mad.`";
         $start .= "\n\nIf you would like to contribute, do visit https://github.com/rajkumaar23/amritarepo-bot";
         $start .= "\n\n*If you want me to display this menu anytime later, just send me a hi or hello*.";

@@ -23,7 +23,7 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
       "text" : "Whatever you want to send to the bot",
       "from" : {
           "id" : "<YOUR_TELEGRAM_ID>",
-          "firstname" : "<YOUR_FIRST_NAME>",
+          "first_name" : "<YOUR_FIRST_NAME>",
           "username" : "<YOUR_TELEGRAM_USERNAME>"
       }
   }

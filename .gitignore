@@ -1,0 +1,4 @@
+vendor/
+error.log
+access.log
+config.php

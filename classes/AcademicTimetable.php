@@ -70,7 +70,7 @@ class AcademicTimetable
         $format = "%-10s";
         foreach ($courseItems as $item) {
             if (trim($item->getAttribute('value')) != "") {
-                $courses .= "\n\n" . $i . ") " . sprintf($format, trim($item->getAttribute('value'))) . "-   " . $year . "_" . trim($item->getAttribute('value'));
+                $courses .= "\n\n" . $i . ") " . sprintf($format, trim($item->getAttribute('value'))) . " -   " . $year . "_" . trim($item->getAttribute('value'));
                 $i++;
             }
         }

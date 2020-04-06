@@ -67,9 +67,9 @@ class AcademicTimetable
         $courseItems = $courseList->getElementsByTagName('option');
         $courses = "Please choose your course from the options below :";
         $i = 1;
+        $format = "%-10s";
         foreach ($courseItems as $item) {
             if (trim($item->getAttribute('value')) != "") {
-                $format = "%-10s";
                 $courses .= "\n\n" . $i . ") " . sprintf($format, trim($item->getAttribute('value'))) . "-   " . $year . "_" . trim($item->getAttribute('value'));
                 $i++;
             }

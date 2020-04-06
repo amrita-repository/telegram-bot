@@ -1,8 +1,11 @@
 <?php
+
+use GuzzleHttp\Client;
+use Sunra\PhpSimple\HtmlDomParser;
+
 /**
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
-
 class AcademicTimetable
 {
 
@@ -57,16 +60,20 @@ class AcademicTimetable
 
     public static function getCourses($year)
     {
-        $courses = "Please choose your course from the options below : \n\n";
-        $courses .= "1)B.Tech     -   " . $year . "_BTech\n\n";
-        $courses .= "2)BA         -   " . $year . "_BA\n\n";
-        $courses .= "3)IMSc       -   " . $year . "_IMsc\n\n";
-        $courses .= "4)M.Tech     -   " . $year . "_MTech\n\n";
-        $courses .= "5)MA         -   " . $year . "_MA\n\n";
-        $courses .= "6)MBA        -   " . $year . "_MBA\n\n";
-        $courses .= "7)MCA        -   " . $year . "_MCA\n\n";
-        $courses .= "8)MSW        -   " . $year . "_MSW\n\n";
-        $courses .= "9)PGD        -   " . $year . "_PGD\n\n";
+        $client = new Client();
+        $response = $client->request('GET', 'https://intranet.cb.amrita.edu/TimeTable');
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $courseList = $dom->getElementById('drop_1');
+        $courseItems = $courseList->getElementsByTagName('option');
+        $courses = "Please choose your course from the options below :";
+        $i = 1;
+        foreach ($courseItems as $item) {
+            if (trim($item->getAttribute('value')) != "") {
+                $format = "%-10s";
+                $courses .= "\n\n" . $i . ") " . sprintf($format, trim($item->getAttribute('value'))) . "-   " . $year . "_" . trim($item->getAttribute('value'));
+                $i++;
+            }
+        }
         return $courses;
     }
 
@@ -92,69 +99,16 @@ class AcademicTimetable
     {
         $course = explode("_", $msg)[2];
         $response = "Okay! Final question xD ! Which branch do you belong to ?";
-        $branches = [];
-        switch ($course) {
-            case "BTech":
-                array_push($branches, "AEE");
-                array_push($branches, "CHE");
-                array_push($branches, "CIE");
-                array_push($branches, "CVI");
-                array_push($branches, "CSE");
-                array_push($branches, "ECE");
-                array_push($branches, "EEE");
-                array_push($branches, "EIE");
-                array_push($branches, "MEE");
-                break;
-            case "BA":
-                array_push($branches, "MAC");
-                array_push($branches, "ENG");
-                break;
-            case "IMsc":
-                array_push($branches, "CHE");
-                array_push($branches, "MAT");
-                array_push($branches, "PHY");
-                break;
-            case "MTech":
-                array_push($branches, "ATE");
-                array_push($branches, "ATL");
-                array_push($branches, "BME");
-                array_push($branches, "CEN");
-                array_push($branches, "CHE");
-                array_push($branches, "CIE");
-                array_push($branches, "CSE");
-                array_push($branches, "CSP");
-                array_push($branches, "CVI");
-                array_push($branches, "CYS");
-                array_push($branches, "EBS");
-                array_push($branches, "EDN");
-                array_push($branches, "MFG");
-                array_push($branches, "MSE");
-                array_push($branches, "PWE");
-                array_push($branches, "RET");
-                array_push($branches, "RSW");
-                array_push($branches, "SCE");
-                array_push($branches, "VLD");
-                break;
-            case "MA":
-                array_push($branches, "CMN");
-                array_push($branches, "MAC");
-                array_push($branches, "ENG");
-                break;
-            case "MBA":
-                array_push($branches, "MBA");
-                break;
-            case "MCA":
-                array_push($branches, "MCA");
-                break;
-            case "MSW":
-                array_push($branches, "MSW");
-                break;
-            case "PGD":
-                array_push($branches, "JLM");
-                break;
-        }
+        $client = new Client();
+        $res = $client->request('GET', 'https://intranet.cb.amrita.edu/TimeTable/funcTimeTable.php?func=drop_1&drop_var=' . $course);
+        $dom = HtmlDomParser::str_get_html($res->getBody());
+        $branchList = $dom->getElementById('drop_2');
+        $branches = $branchList->getElementsByTagName('option');
+        $i = 1;
         foreach ($branches as $branch) {
-            $response .= "\n\n" . $branch . "   -  " . $msg . "_" . $branch;
+            if (trim($branch->getAttribute('value')) != "") {
+                $response .= "\n\n" . trim($branch->getAttribute('value')) . "   -  " . $msg . "_" . trim($branch->getAttribute('value'));
+            }
         }
         return $response;
     }

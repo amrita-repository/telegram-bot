@@ -1,6 +1,6 @@
 # Amrita Repository - Bot
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 > A non-modular, low-perf, no-ML, if-else telegram bot built with Flight PHP.
 
@@ -62,6 +62,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://rajkumaar.co.in"><img src="https://avatars1.githubusercontent.com/u/37476886?v=4" width="100px;" alt=""/><br /><sub><b>Rajkumar S</b></sub></a><br /><a href="https://github.com/rajkumaar23/amritarepo-bot/commits?author=rajkumaar23" title="Code">💻</a> <a href="https://github.com/rajkumaar23/amritarepo-bot/commits?author=rajkumaar23" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/sanjana2610"><img src="https://avatars3.githubusercontent.com/u/41717568?v=4" width="100px;" alt=""/><br /><sub><b>Sanjana G</b></sub></a><br /><a href="https://github.com/rajkumaar23/amritarepo-bot/commits?author=sanjana2610" title="Code">💻</a></td>
   </tr>
 </table>
 

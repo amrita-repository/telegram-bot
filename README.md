@@ -20,7 +20,7 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 - Create `access.log` and `error.log` at the root of the project directory, with all permissions (`chmod 777 access.log error.log` on Linux).
 - Run a `composer install` to fetch all dependencies.
 - Run `php -S 0.0.0.0:2304` to start the web server.
-- Use an API testing tool like [Postman](https://postman.com) and send a POST request to `http://localhost:2304/<YOUR_API_KEY>` with the sample body 
+- Use an API testing tool like [Postman](https://postman.com) and send a POST request to `http://localhost:2304/<YOUR_BOT_TOKEN>` with the sample body 
 ```json
 {
   "message" : {

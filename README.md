@@ -1,7 +1,7 @@
 # Amrita Repository - Bot
 > A non-modular, low-perf, no-ML, if-else telegram bot built with Flight PHP.
 
-[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-333e5c)](https://t.me/amrepobot) 
+[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot) 
 
 ## Contributing
 - Make sure you have `PHP` and `composer` installed in your system.
@@ -14,7 +14,7 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 ```
 - Get into the `amritarepo-bot` directory.
 - Copy `config.example.php` and paste it as `config.php` and fill in necessary stuff.
-- Create `access.log` and `error.log` at the root of the project directory.
+- Create `access.log` and `error.log` at the root of the project directory, with all permissions (`chmod 777 access.log error.log` on Linux).
 - Run a `composer install` to fetch all dependencies.
 - Run `php -S 0.0.0.0:2304` to start the web server.
 - Use an API testing tool like [Postman](https://postman.com) and send the request to `http://localhost:2304/<YOUR_API_KEY>` with the sample body 

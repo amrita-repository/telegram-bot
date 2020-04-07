@@ -186,7 +186,7 @@ class QPapers
         $url = 'http://dspace.amritanet.edu:8080/' . $doc;
         $client = new Client();
         if (!SHOULD_PROXY) {
-            $response = $client->get($domain);
+            $response = $client->get($url);
         } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [

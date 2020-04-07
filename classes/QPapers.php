@@ -183,7 +183,7 @@ class QPapers
             $bot->sendMessage($from, "Sorry about that! Something bad happened to me");
             return;
         }
-        $domain = 'http://dspace.amritanet.edu:8080/' . $doc;
+        $url = 'http://dspace.amritanet.edu:8080/' . $doc;
         $client = new Client();
         if (!SHOULD_PROXY) {
             $response = $client->get($domain);

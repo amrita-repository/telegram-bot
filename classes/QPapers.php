@@ -190,7 +190,7 @@ class QPapers
         } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [
-                    'data' => $domain, 'hash' => HASH
+                    'data' => $url, 'hash' => HASH
                 ]
             ]);
         }

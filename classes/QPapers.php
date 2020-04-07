@@ -49,25 +49,24 @@ class QPapers
         $course = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $course;
         $client = new Client();
-        try {
+        if (!SHOULD_PROXY) {
             $response = $client->get($url);
-        }catch(\Exception $e){
+        } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
             ]);
-        }finally{
-            $dom = HtmlDomParser::str_get_html($response->getBody());
-            $semesters = $dom->find('ul', 2)->getElementsByTagName('li');
-            $result = "Okay which semester are you currently in ? ";
-            foreach ($semesters as $item) {
-                $result .= "\n\n" . trim($item->find('a[href]', 0)->text()) . " (";
-                $total = sizeof(explode("/", $item->find('a[href]', 0)->href));
-                $result .= "/qpapersa" . "_" . explode("/", $item->find('a[href]', 0)->href)[$total - 1] . ")";
-            }
-            return $result;
         }
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $semesters = $dom->find('ul', 2)->getElementsByTagName('li');
+        $result = "Okay which semester are you currently in ? ";
+        foreach ($semesters as $item) {
+            $result .= "\n\n" . trim($item->find('a[href]', 0)->text()) . " (";
+            $total = sizeof(explode("/", $item->find('a[href]', 0)->href));
+            $result .= "/qpapersa" . "_" . explode("/", $item->find('a[href]', 0)->href)[$total - 1] . ")";
+        }
+        return $result;
     }
 
     public static function getAssessments($msg)
@@ -75,34 +74,33 @@ class QPapers
         $semester = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $semester;
         $client = new Client();
-        try {
+        if (!SHOULD_PROXY) {
             $response = $client->get($url);
-        }catch(\Exception $e){
+        } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
             ]);
-        }finally{
-            $dom = HtmlDomParser::str_get_html($response->getBody());
-            $semesters = $dom->find('ul', 3)->getElementsByTagName('li');
-            $result = "";
-            $i = 1;
-            foreach ($semesters as $item) {
-                $title = trim($item->find('a[href]', 0)->text());
-                $array = explode(" ", $title);
-                unset($array[0]);
-                unset($array[1]);
-                $array = array_values($array);
-                $title = implode(" ", $array);
-                $result .= "\n\n\n" . $i . ") " . $title . " (";
-                $total = sizeof(explode("/", $item->find('a[href]', 0)->href));
-                $result .= "/qpapersub" . "_" . explode("/", $item->find('a[href]', 0)->href)[$total - 1] . ")";
-                $i++;
-            }
-            $result .= "\n\nOkay which assessment are you preparing for ? ";
-            return $result;
         }
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $semesters = $dom->find('ul', 3)->getElementsByTagName('li');
+        $result = "";
+        $i = 1;
+        foreach ($semesters as $item) {
+            $title = trim($item->find('a[href]', 0)->text());
+            $array = explode(" ", $title);
+            unset($array[0]);
+            unset($array[1]);
+            $array = array_values($array);
+            $title = implode(" ", $array);
+            $result .= "\n\n\n" . $i . ") " . $title . " (";
+            $total = sizeof(explode("/", $item->find('a[href]', 0)->href));
+            $result .= "/qpapersub" . "_" . explode("/", $item->find('a[href]', 0)->href)[$total - 1] . ")";
+            $i++;
+        }
+        $result .= "\n\nOkay which assessment are you preparing for ? ";
+        return $result;
     }
 
     public static function getSubjects($msg)
@@ -110,42 +108,39 @@ class QPapers
         $ass = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
         $client = new Client();
-        try {
+        if (!SHOULD_PROXY) {
             $response = $client->get($url);
-        }catch(\Exception $e){
+        } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
             ]);
-        }finally{
-            $dom = HtmlDomParser::str_get_html($response->getBody());
-            $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
-            $url = "http://dspace.amritanet.edu:8080" . $nextURL;
-            try {
-                $response = $client->get($url);
-            }catch(\Exception $e){
-                $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-                    'form_params' => [
-                        'data' => $url, 'hash' => HASH
-                    ]
-                ]);
-            }finally{
-                $dom = HtmlDomParser::str_get_html($response->getBody());
-                $links = $dom->find('div.file-link');
-                $titles = $dom->find('div.file-metadata');
-                $result = "";
-                for ($i = 0; $i < sizeof($titles); ++$i) {
-                    $title = explode("_", $titles[$i]->find('span', 1)->title)[0];
-                    $link = explode("?", $links[$i]->find('a', 0)->href)[0];
-                    $count = sizeof(explode("/", $link));
-                    $link = explode("/", $link)[$count - 1];
-                    $result .= "\n\n" . ($i + 1) . ") ". strtoupper($title)."     -  /qd_" . $ass . "_" . ($i+1);
-                }
-                return $result;
-            }
         }
-
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
+        $url = "http://dspace.amritanet.edu:8080" . $nextURL;
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $links = $dom->find('div.file-link');
+        $titles = $dom->find('div.file-metadata');
+        $result = "";
+        for ($i = 0; $i < sizeof($titles); ++$i) {
+            $title = explode("_", $titles[$i]->find('span', 1)->title)[0];
+            $link = explode("?", $links[$i]->find('a', 0)->href)[0];
+            $count = sizeof(explode("/", $link));
+            $link = explode("/", $link)[$count - 1];
+            $result .= "\n\n" . ($i + 1) . ") " . strtoupper($title) . "     -  /qd_" . $ass . "_" . ($i + 1);
+        }
+        return $result;
     }
 
     public static function sendDoc($msg, $bot, $from)
@@ -155,63 +150,60 @@ class QPapers
         $subject = explode("_", $msg)[2];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
         $client = new Client();
-        try {
+        if (!SHOULD_PROXY) {
             $response = $client->get($url);
-        }catch(\Exception $e){
+        } else {
             $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
             ]);
-        }finally{
-            $dom = HtmlDomParser::str_get_html($response->getBody());
-            $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
-            $url = "http://dspace.amritanet.edu:8080" . $nextURL;
-            try {
-                $response = $client->get($url);
-            }catch(\Exception $e){
-                $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-                    'form_params' => [
-                        'data' => $url, 'hash' => HASH
-                    ]
-                ]);
-            }finally{
-                $dom = HtmlDomParser::str_get_html($response->getBody());
-                $links = $dom->find('div.file-link');
-                $links_array = [];
-                for ($i = 0; $i < sizeof($links); ++$i) {
-                    $link = explode("?", $links[$i]->find('a', 0)->href)[0];
-                    array_push($links_array, $link);
-                }
-                $doc = $links_array[$subject-1];
-                if (empty($doc) || is_null($doc)) {
-                    $bot->sendMessage($from, "Sorry about that! Something bad happened to me");
-                    return;
-                }
-                $domain = 'http://dspace.amritanet.edu:8080/' . $doc;
-                $client = new Client();
-                try {
-                    $response = $client->get($domain);
-                }catch(\Exception $e){
-                    $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-                        'form_params' => [
-                            'data' => $domain, 'hash' => HASH
-                        ]
-                    ]);
-                }finally{
-                    try {
-                        $title = explode("_", basename($links_array[$subject-1]))[0];
-                        file_put_contents('docs/' . $title . '.pdf', $response->getBody());
-                        $bot->sendDocument($from, new CURLFile('docs/' . $title.'.pdf'));
-                        $bot->sendMessage($from, "There you go! All the best ^_^");
-                    } catch (Exception $exception) {
-                        $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
-                        file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
-                        $bot->sendMessage(MASTER_ID, $exception->getMessage());
-                        $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
-                    }
-                }
-            }
+        }
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
+        $url = "http://dspace.amritanet.edu:8080" . $nextURL;
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
+        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $links = $dom->find('div.file-link');
+        $links_array = [];
+        for ($i = 0; $i < sizeof($links); ++$i) {
+            $link = explode("?", $links[$i]->find('a', 0)->href)[0];
+            array_push($links_array, $link);
+        }
+        $doc = $links_array[$subject - 1];
+        if (empty($doc) || is_null($doc)) {
+            $bot->sendMessage($from, "Sorry about that! Something bad happened to me");
+            return;
+        }
+        $domain = 'http://dspace.amritanet.edu:8080/' . $doc;
+        $client = new Client();
+        if (!SHOULD_PROXY) {
+            $response = $client->get($domain);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $domain, 'hash' => HASH
+                ]
+            ]);
+        }
+        try {
+            $title = explode("_", basename($links_array[$subject - 1]))[0];
+            file_put_contents('docs/' . $title . '.pdf', $response->getBody());
+            $bot->sendDocument($from, new CURLFile('docs/' . $title . '.pdf'));
+            $bot->sendMessage($from, "There you go! All the best ^_^");
+        } catch (Exception $exception) {
+            $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
+            file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
+            $bot->sendMessage(MASTER_ID, $exception->getMessage());
+            $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
         }
     }
 }

@@ -195,7 +195,7 @@ class QPapers
             ]);
         }
         try {
-            $title = explode("_", basename($links_array[$subject - 1]))[0];
+            $title = urldecode(explode("_", basename($links_array[$subject - 1]))[0]);
             file_put_contents('docs/' . $title . '.pdf', $response->getBody());
             $bot->sendDocument($from, new CURLFile('docs/' . $title . '.pdf'));
             $bot->sendMessage($from, "There you go! All the best ^_^");

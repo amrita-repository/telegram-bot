@@ -16,7 +16,7 @@ class MainHandler
         $bot = new BotApi(API_KEY);
         try {
             if (in_array(trim(strtolower($message)), $startKeyWords)) {
-                $keyboard = new InlineKeyboardMarkup([[['text' => 'Read more about my developer', 'url' => 'http://rajkumaar.co.in']]]);
+                $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'],['text'=>'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
                 if ($message == "start" || $message == "/start") {
                     $reply = self::getStartText($from, $name, $bot, true);
                 } else {
@@ -65,18 +65,17 @@ class MainHandler
     public static function getStartText($from, $name, $bot, $start = false)
     {
         if ($start) {
-            $start = "Hola " . $name . ", \nI'm here to make the lives of `Amritians` simpler. I'm still on `beta` testing. ";
+            $start = "Hola " . $name . ", \nI'm here to make the lives of `Amritians` simpler.";
             $start .= "\n\n`Please note that I work mostly on commands (which start with a /) and I don't understand your language otherwise.`";
             $bot->sendMessage($from, $start, "markdown");
             sleep(5);
         }
         $start = "\n\nAll set! How shall I help you ? Please click a command from the options below\n";
-        $start .= "\n1) /actimetable - Academic Timetable for students of all departments";
-        $start .= "\n\n2) /qpapersc - Previous year question papers for all the departments";
-        $start .= "\n\n3) /ft - Get the timetable of any faculty in the campus";
-        $start .= "\n\n4) /news - Get fastest news capsules regarding our university";
-        $start .= "\n\nDeveloped with ❤ by @rajkumaar23 \n\n`I'm still on beta testing, please report to my developer if I go mad.`";
-        $start .= "\n\nIf you would like to contribute, do visit https://github.com/rajkumaar23/amritarepo-bot";
+        $start .= "\n📅   /actimetable - Student Timetable ";
+        $start .= "\n\n📝   /qpapersc - Question papers ";
+        $start .= "\n\n👨‍🏫   /ft - Faculty Timetable ";
+        $start .= "\n\n📰   /news - News capsules ";
+        $start .= "\n\nDeveloped with ❤ by @rajkumaar23";
         $start .= "\n\n*If you want me to display this menu anytime later, just send me a hi or hello*.";
         return $start;
     }

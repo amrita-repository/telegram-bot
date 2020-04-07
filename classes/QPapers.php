@@ -49,11 +49,15 @@ class QPapers
         $course = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $course;
         $client = new Client();
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $semesters = $dom->find('ul', 2)->getElementsByTagName('li');
         $result = "Okay which semester are you currently in ? ";
@@ -70,11 +74,15 @@ class QPapers
         $semester = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $semester;
         $client = new Client();
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $semesters = $dom->find('ul', 3)->getElementsByTagName('li');
         $result = "";
@@ -100,19 +108,27 @@ class QPapers
         $ass = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
         $client = new Client();
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
         $url = "http://dspace.amritanet.edu:8080" . $nextURL;
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $links = $dom->find('div.file-link');
         $titles = $dom->find('div.file-metadata');
@@ -122,7 +138,7 @@ class QPapers
             $link = explode("?", $links[$i]->find('a', 0)->href)[0];
             $count = sizeof(explode("/", $link));
             $link = explode("/", $link)[$count - 1];
-            $result .= "\n\n" . ($i + 1) . ") /qd_" . $ass . "_" . $title;
+            $result .= "\n\n" . ($i + 1) . ") " . strtoupper($title) . "     -  /qd_" . $ass . "_" . ($i + 1);
         }
         return $result;
     }
@@ -134,19 +150,27 @@ class QPapers
         $subject = explode("_", $msg)[2];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
         $client = new Client();
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
         $url = "http://dspace.amritanet.edu:8080" . $nextURL;
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $url, 'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         $dom = HtmlDomParser::str_get_html($response->getBody());
         $links = $dom->find('div.file-link');
         $links_array = [];
@@ -154,27 +178,26 @@ class QPapers
             $link = explode("?", $links[$i]->find('a', 0)->href)[0];
             array_push($links_array, $link);
         }
-        foreach ($links_array as $link) {
-            if (strpos($link, $subject) !== false) {
-                $doc = $link;
-                break;
-            }
-        }
+        $doc = $links_array[$subject - 1];
         if (empty($doc) || is_null($doc)) {
             $bot->sendMessage($from, "Sorry about that! Something bad happened to me");
             return;
         }
-        $domain = 'http://dspace.amritanet.edu:8080';
+        $url = 'http://dspace.amritanet.edu:8080/' . $doc;
         $client = new Client();
-        $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
-            'form_params' => [
-                'data' => $domain . '/' . $doc,
-                'hash' => HASH
-            ]
-        ]);
+        if (!SHOULD_PROXY) {
+            $response = $client->get($url);
+        } else {
+            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+                'form_params' => [
+                    'data' => $url, 'hash' => HASH
+                ]
+            ]);
+        }
         try {
-            file_put_contents('docs/' . $subject . '.pdf', $response->getBody());
-            $bot->sendDocument($from, new CURLFile('docs/' . $subject . '.pdf'));
+            $title = explode("_", basename($links_array[$subject - 1]))[0];
+            file_put_contents('docs/' . $title . '.pdf', $response->getBody());
+            $bot->sendDocument($from, new CURLFile('docs/' . $title . '.pdf'));
             $bot->sendMessage($from, "There you go! All the best ^_^");
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");

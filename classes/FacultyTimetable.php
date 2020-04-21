@@ -27,7 +27,7 @@ class FacultyTimetable
                 return;
             }
             foreach ($options as $option) {
-                if ($i == sizeof($options)) break;
+                if ($i == min(15, sizeof($options))) break;
                 $reply .= "\n\n" . $i . ") " . $option . " (/ft_" . $query . "_$i" . ")";
                 $i++;
             }

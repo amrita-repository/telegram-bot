@@ -7,18 +7,19 @@ use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;
 
 $startKeyWords = ['hey', 'hello', 'hi', 'yo', 'menu', 'start', '/start'];
+$reply = "Oh dear, I wish I was a human to understand what you speak 😓️ May be try that with @rajkumaar23 and see if he understands? 😬️";
 
 class MainHandler
 {
 
     public static function respond($message, $from, $name, $username)
     {
-        $message = str_replace("/", "", strtolower($message));
+        $message = strtolower($message);
         file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
         $bot = new BotApi(API_KEY);
         try {
             global $startKeyWords;
-            if (in_array(trim(strtolower($message)), $startKeyWords)) {
+            if (in_array(trim($message), $startKeyWords)) {
                 $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'], ['text' => 'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
                 if ($message == "start" || $message == "/start") {
                     $reply = self::getStartText($from, $name, $bot, true);
@@ -32,11 +33,11 @@ class MainHandler
             } else if ((strpos($message, "qpapers") !== false) || (strpos($message, "qd") !== false)) {
                 QPapers::handle($message, $from, $bot);
                 return;
-            } else if ((strpos(strtolower($message), "ft") !== false)) {
+            } else if ((strpos($message, "ft") !== false)) {
                 FacultyTimetable::handle($message, $from, $bot);
             } else if ((strpos($message, "news") !== false)) {
                 News::handle($from, $message, $bot);
-            } else if (strtolower($message) == "logs") {
+            } else if ($message == "logs") {
                 if ($from == MASTER_ID) {
                     $keyboard = new InlineKeyboardMarkup([[
                         ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/access.log"],
@@ -49,12 +50,12 @@ class MainHandler
                 return;
             } else if (strpos($message, "anly") !== false && $from == MASTER_ID) {
                 $reply = Analytics::handle($message, $from, $bot);
-            } else if ((strpos(strtolower($message), "thank") !== false)) {
+            } else if ((strpos($message, "thank") !== false)) {
                 $reply = "You are welcome. I'll convey it to my master @rajkumaar23 ❤";
             } else if (strpos($message, "love you") !== false || strpos($message, "love u") !== false || strpos($message, "love ya") !== false) {
-                $reply = "Hey " . explode(" ",$name)[0] ." 😍️, I love you too 😌️";
+                $reply = "Hey " . explode(" ", $name)[0] . " 😍️, I love you too 😌️";
             } else {
-                $reply = "Oh dear " . explode(" ",$name)[0] .", I wish I was a human to understand what you speak 😓️ May be try that with @rajkumaar23 and see if he understands? 😬️";
+                global $reply;
             }
             if (!empty($reply) && !is_null($reply) && isset($reply) && $reply != "") {
                 $bot->sendMessage($from, $reply);
@@ -73,7 +74,7 @@ class MainHandler
             $start = "Hola " . $name . ", \nI'm here to make the lives of `Amritians` simpler. 😉️";
             $start .= "\n\n`Please note that I work mostly on commands (which start with a /) and I don't understand your language otherwise.`";
             $bot->sendMessage($from, $start, "markdown");
-            sleep(5);
+            sleep(3);
         }
         $start = "\n\nAll set! How shall I help you ? Please click a command from the options below\n";
         $start .= "\n📅   /actimetable - Student Timetable ";

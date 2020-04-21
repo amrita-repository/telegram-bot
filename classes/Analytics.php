@@ -14,7 +14,6 @@ class Analytics
 
     public static function handle($message, $from, $bot)
     {
-        $message = strtolower($message);
         switch ($message) {
             case "anly" :
                 $keyboard = new ReplyKeyboardMarkup([
@@ -152,11 +151,11 @@ class Analytics
             return "📅️ Academic Timetable";
         } else if ((strpos($message, "qpapers") !== false) || (strpos($message, "qd") !== false)) {
             return "📚️ QPapers";
-        } else if ((strpos(strtolower($message), "ft") !== false)) {
+        } else if ((strpos($message, "ft") !== false)) {
             return "👨‍🏫  Faculty Timetable";
         } else if ((strpos($message, "news") !== false)) {
             return "📰️ News";
-        } else if ((strpos(strtolower($message), "thank") !== false)) {
+        } else if ((strpos($message, "thank") !== false)) {
             return "🙏️ Thanks";
         } else {
             return "💩️ Human Language";

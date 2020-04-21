@@ -11,13 +11,13 @@ class FacultyTimetable
 
     public static function handle($message, $from, $bot)
     {
-        if (strtolower($message) == "ft" || strtolower($message) == "/ft") {
+        if ($message == "ft") {
             $reply = "Alright. I just heard you used the command for faculty timetable.\n";
             $reply .= "So, send me *ft* followed by a keyword out of the faculty's name and I'll show you related results. \n\nFor example, if you want to search for staff named Steve Jobs, please reply as: \n\n`ft ste`";
             $bot->sendMessage($from, $reply, "markdown");
             return;
-        } else if (sizeof(explode(" ", $message)) == 2) {
-            $query = strtolower(explode(" ", $message)[1]);
+        } else if (sizeof(explode("_", $message)) < 2) {
+            $query = substr($message, 3, strlen($message));
             $bot->sendMessage($from, "Ok, your search query is " . $query);
             $options = self::getSearchResults($query);
             $reply = "";
@@ -39,7 +39,7 @@ class FacultyTimetable
             self::sendDoc($bot, $from, $message);
             return;
         } else {
-            $reply = "Oh-No! I don't understand human language!\nContact my master : @rajkumaar23";
+            global $reply;
         }
         if (!empty($reply) && !is_null($reply) && isset($reply) && $reply != "") {
             $bot->sendMessage($from, $reply);

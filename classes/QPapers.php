@@ -23,7 +23,7 @@ class QPapers
             self::sendDoc($message, $bot, $from);
             return;
         } else {
-            $reply = "Oh-No! I don't understand human language!\nContact my master : @rajkumaar23";
+            global $reply;
         }
         if (!empty($reply) && !is_null($reply) && isset($reply) && $reply != "") {
             $bot->sendMessage($from, $reply);

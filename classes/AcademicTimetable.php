@@ -1,4 +1,7 @@
 <?php
+/**
+ * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
+ */
 
 use GuzzleHttp\Client;
 use Sunra\PhpSimple\HtmlDomParser;
@@ -39,7 +42,7 @@ class AcademicTimetable
                         }
                         return "";
                     default:
-                        $reply = "Oh-No! I don't understand human language!\nContact my master : @rajkumaar23";
+                        global $reply;
                         break;
                 }
                 break;

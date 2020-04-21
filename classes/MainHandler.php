@@ -14,30 +14,30 @@ class MainHandler
 
     public static function respond($message, $from, $name, $username)
     {
-        $message = strtolower($message);
+        $smallerMessage = strtolower($message);
         file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
         $bot = new BotApi(API_KEY);
         try {
             global $startKeyWords;
-            if (in_array(trim($message), $startKeyWords)) {
+            if (in_array(trim($smallerMessage), $startKeyWords)) {
                 $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'], ['text' => 'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
-                if ($message == "start" || $message == "/start") {
+                if ($smallerMessage == "start" || $smallerMessage == "/start") {
                     $reply = self::getStartText($from, $name, $bot, true);
                 } else {
                     $reply = self::getStartText($from, $name, $bot);
                 }
                 $bot->sendMessage($from, $reply, "markdown", false, null, $keyboard);
                 return;
-            } else if (strpos($message, "act") !== false) {
+            } else if (strpos($smallerMessage, "act") !== false) {
                 $reply = AcademicTimetable::handle($bot, $from, $message);
-            } else if ((strpos($message, "qpapers") !== false) || (strpos($message, "qd") !== false)) {
-                QPapers::handle($message, $from, $bot);
+            } else if ((strpos($smallerMessage, "qpapers") !== false) || (strpos($smallerMessage, "qd") !== false)) {
+                QPapers::handle($smallerMessage, $from, $bot);
                 return;
-            } else if ((strpos($message, "ft") !== false)) {
-                FacultyTimetable::handle($message, $from, $bot);
-            } else if ((strpos($message, "news") !== false)) {
-                News::handle($from, $message, $bot);
-            } else if ($message == "logs") {
+            } else if ((strpos($smallerMessage, "ft") !== false)) {
+                FacultyTimetable::handle($smallerMessage, $from, $bot);
+            } else if ((strpos($smallerMessage, "news") !== false)) {
+                News::handle($from, $smallerMessage, $bot);
+            } else if ($smallerMessage == "logs") {
                 if ($from == MASTER_ID) {
                     $keyboard = new InlineKeyboardMarkup([[
                         ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/access.log"],
@@ -48,11 +48,11 @@ class MainHandler
                     $bot->sendMessage($from, "Haha, Nice try! I can share the logs only with my master, @rajkumaar23 ^_^");
                 }
                 return;
-            } else if (strpos($message, "anly") !== false && $from == MASTER_ID) {
-                $reply = Analytics::handle($message, $from, $bot);
-            } else if ((strpos($message, "thank") !== false)) {
+            } else if (strpos($smallerMessage, "anly") !== false && $from == MASTER_ID) {
+                $reply = Analytics::handle($smallerMessage, $from, $bot);
+            } else if ((strpos($smallerMessage, "thank") !== false)) {
                 $reply = "You are welcome. I'll convey it to my master @rajkumaar23 ❤";
-            } else if (strpos($message, "love you") !== false || strpos($message, "love u") !== false || strpos($message, "love ya") !== false) {
+            } else if (strpos($smallerMessage, "love you") !== false || strpos($smallerMessage, "love u") !== false || strpos($smallerMessage, "love ya") !== false) {
                 $reply = "Hey " . explode(" ", $name)[0] . " 😍️, I love you too 😌️";
             } else {
                 global $reply;

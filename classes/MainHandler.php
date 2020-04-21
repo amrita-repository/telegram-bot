@@ -52,9 +52,9 @@ class MainHandler
             } else if ((strpos(strtolower($message), "thank") !== false)) {
                 $reply = "You are welcome. I'll convey it to my master @rajkumaar23 ❤";
             } else if (strpos($message, "love you") !== false || strpos($message, "love u") !== false || strpos($message, "love ya") !== false) {
-                $reply = "Hey $name 😍️, I love you too 😌️";
+                $reply = "Hey " . explode(" ",$name)[0] ." 😍️, I love you too 😌️";
             } else {
-                $reply = "Oh dear $name, I wish I was a human to understand what you speak 😓️ May be try that with @rajkumaar23 and see if he understands? 😬️";
+                $reply = "Oh dear " . explode(" ",$name)[0] .", I wish I was a human to understand what you speak 😓️ May be try that with @rajkumaar23 and see if he understands? 😬️";
             }
             if (!empty($reply) && !is_null($reply) && isset($reply) && $reply != "") {
                 $bot->sendMessage($from, $reply);

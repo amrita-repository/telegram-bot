@@ -135,7 +135,7 @@ class Analytics
             $reply = "Here are the message stats\n\n";
             arsort($map);
             foreach ($map as $key => $value) {
-                $reply .= ($key . " - *" . $value . "*\n\n");
+                $reply .= ($key . " - " . $value . "\n\n");
             }
             return $reply;
         } else {

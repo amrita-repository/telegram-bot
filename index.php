@@ -6,12 +6,12 @@
 require_once 'vendor/autoload.php';
 require_once 'classes/AcademicTimetable.php';
 require_once 'config.php';
-require_once 'clearCache.php';
 require_once 'classes/MainHandler.php';
 require_once 'classes/QPapers.php';
 require_once 'classes/FacultyTimetable.php';
 require_once 'classes/NewsModel.php';
 require_once 'classes/News.php';
+require_once 'classes/Analytics.php';
 date_default_timezone_set('Asia/Kolkata');
 
 Flight::route('/' . API_KEY, function () {
@@ -19,7 +19,7 @@ Flight::route('/' . API_KEY, function () {
     $message = $data->message->text;
     $from = $data->message->from->id;
     $name = $data->message->from->first_name;
-    $username = isset($data->message->from->username) ? $data->message->from->username : "N/A";
+    $username = isset($data->message->from->username) ? $data->message->from->username : "NA";
     MainHandler::respond($message, $from, $name, $username);
 });
 Flight::start();

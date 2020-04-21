@@ -199,6 +199,7 @@ class QPapers
             file_put_contents('docs/' . $title . '.pdf', $response->getBody());
             $bot->sendDocument($from, new CURLFile('docs/' . $title . '.pdf'));
             $bot->sendMessage($from, "There you go! All the best ^_^");
+            unlink('docs/' . $title . '.pdf');
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
             file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);

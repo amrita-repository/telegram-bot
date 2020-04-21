@@ -53,7 +53,7 @@ class MainHandler
             } else if ((strpos($smallerMessage, "thank") !== false)) {
                 $reply = "You are welcome. I'll convey it to my master @rajkumaar23 ❤";
             } else if (strpos($smallerMessage, "love you") !== false || strpos($smallerMessage, "love u") !== false || strpos($smallerMessage, "love ya") !== false) {
-                $reply = "Hey " . explode(" ", $name)[0] . " 😍️, I love you too 😌️";
+                $reply = "Hey " . explode(" ", $name)[0] . ", \n\nYou are wind beneath my wings 😌️";
             } else {
                 global $reply;
             }

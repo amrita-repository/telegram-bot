@@ -6,17 +6,20 @@
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;
 
+$startKeyWords = ['hey', 'hello', 'hi', 'yo', 'menu', 'start', '/start'];
+
 class MainHandler
 {
 
     public static function respond($message, $from, $name, $username)
     {
-        file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . $message . "\n", FILE_APPEND | LOCK_EX);
-        $startKeyWords = ['hey', 'hello', 'hi', 'yo', 'menu', 'start', '/start'];
+        $message = str_replace("/", "", strtolower($message));
+        file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
         $bot = new BotApi(API_KEY);
         try {
+            global $startKeyWords;
             if (in_array(trim(strtolower($message)), $startKeyWords)) {
-                $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'],['text'=>'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
+                $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'], ['text' => 'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
                 if ($message == "start" || $message == "/start") {
                     $reply = self::getStartText($from, $name, $bot, true);
                 } else {
@@ -44,10 +47,14 @@ class MainHandler
                     $bot->sendMessage($from, "Haha, Nice try! I can share the logs only with my master, @rajkumaar23 ^_^");
                 }
                 return;
+            } else if (strpos($message, "anly") !== false && $from == MASTER_ID) {
+                $reply = Analytics::handle($message, $from, $bot);
             } else if ((strpos(strtolower($message), "thank") !== false)) {
                 $reply = "You are welcome. I'll convey it to my master @rajkumaar23 ❤";
+            } else if (strpos($message, "love you") !== false || strpos($message, "love u") !== false || strpos($message, "love ya") !== false) {
+                $reply = "Hey $name 😍️, I love you too 😌️";
             } else {
-                $reply = "Ahha! I don't understand your language!\n\nContact my master : @rajkumaar23 ❤";
+                $reply = "Oh dear $name, I wish I was a human to understand what you speak 😓️ May be try that with @rajkumaar23 and see if he understands? 😬️";
             }
             if (!empty($reply) && !is_null($reply) && isset($reply) && $reply != "") {
                 $bot->sendMessage($from, $reply);
@@ -55,17 +62,15 @@ class MainHandler
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
             file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
-            if ($from != MASTER_ID) {
-                $bot->sendMessage(MASTER_ID, $exception->getMessage());
-                $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
-            }
+            $bot->sendMessage(MASTER_ID, $exception->getMessage());
+            $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
         }
     }
 
     public static function getStartText($from, $name, $bot, $start = false)
     {
         if ($start) {
-            $start = "Hola " . $name . ", \nI'm here to make the lives of `Amritians` simpler.";
+            $start = "Hola " . $name . ", \nI'm here to make the lives of `Amritians` simpler. 😉️";
             $start .= "\n\n`Please note that I work mostly on commands (which start with a /) and I don't understand your language otherwise.`";
             $bot->sendMessage($from, $start, "markdown");
             sleep(5);

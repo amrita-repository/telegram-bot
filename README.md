@@ -4,7 +4,7 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 > A non-modular, low-perf, no-ML, if-else telegram bot built with Flight PHP.
 
-[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot) 
+[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot) ![Amrita Repository Bot CD](https://github.com/rajkumaar23/amritarepo-bot/workflows/Amrita%20Repository%20Bot%20CD/badge.svg)
 
 ## Contributing
 - Make sure you have `PHP` and `composer` installed in your system.

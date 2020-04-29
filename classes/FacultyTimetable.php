@@ -92,7 +92,6 @@ class FacultyTimetable
             'Nsem' => trim(strtoupper($sem)),
             'NAMEshwbutton' => "Show Details"
         ];
-        var_dump($data);
         $client = new Client();
         $response = $client->request("post", "https://intranet.cb.amrita.edu/TimeTable/Faculty/index.php", [
             'form_params' => $data,

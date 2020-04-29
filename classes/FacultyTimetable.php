@@ -11,7 +11,7 @@ class FacultyTimetable
 
     public static function handle($message, $from, $bot)
     {
-        if ($message == "ft") {
+        if ($message == "ft" || $message == "/ft") {
             $reply = "Alright. I just heard you used the command for faculty timetable.\n";
             $reply .= "So, send me *ft* followed by a keyword out of the faculty's name and I'll show you related results. \n\nFor example, if you want to search for staff named Steve Jobs, please reply as: \n\n`ft ste`";
             $bot->sendMessage($from, $reply, "markdown");

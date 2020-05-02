@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
@@ -15,7 +16,8 @@ class MainHandler
     public static function respond($message, $from, $name, $username)
     {
         $smallerMessage = strtolower($message);
-        file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
+        if ($from != MASTER_ID)
+            file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
         $bot = new BotApi(API_KEY);
         try {
             global $startKeyWords;

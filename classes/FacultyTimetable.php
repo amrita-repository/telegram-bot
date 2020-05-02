@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
@@ -12,8 +11,7 @@ class FacultyTimetable
 
     public static function handle($message, $from, $bot)
     {
-        $message = str_replace("/", "", $message);
-        if ($message == "ft") {
+        if ($message == "ft" || $message == "/ft") {
             $reply = "Alright. I just heard you used the command for faculty timetable.\n";
             $reply .= "So, send me *ft* followed by a keyword out of the faculty's name and I'll show you related results. \n\nFor example, if you want to search for staff named Steve Jobs, please reply as: \n\n`ft ste`";
             $bot->sendMessage($from, $reply, "markdown");
@@ -61,7 +59,7 @@ class FacultyTimetable
         $current_year = date("Y");
         $year = "Okay. Tell me the academic year you want the timetable for : ";
         for ($i = 4, $j = 3; $i >= 0; $i--, $j--) {
-            $year .= "\n\n(" . (($current_year - $i) . "-" . substr((string) ((int) $current_year - $j), 2, 4)) . ")  -  " . $prev . "_" . (($current_year - $i) . "" . substr((string) ((int) $current_year - $j), 2, 4));
+            $year .= "\n\n(" . (($current_year - $i) . "-" . substr((string)((int)$current_year - $j), 2, 4)) . ")  -  " . $prev . "_" . (($current_year - $i) . "" . substr((string)((int)$current_year - $j), 2, 4));
         }
         return $year;
     }
@@ -106,5 +104,6 @@ class FacultyTimetable
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Oops! The document you asked for, is not uploaded yet.");
         }
+
     }
 }

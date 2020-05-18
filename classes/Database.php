@@ -3,7 +3,6 @@
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
-namespace Classes;
 
 use PDO;
 

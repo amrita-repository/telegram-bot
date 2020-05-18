@@ -1,12 +1,11 @@
 <?php
-namespace Classes;
-
 use GuzzleHttp\Client;
 
 class AUMS
 {
     public static function handle($message, $from, $bot)
     {
+        $repo = new AUMSRepository();
         if ($message == "ums" || $message == "/ums") {
             $reply = "Send your AUMS credentials in this format\n\n`ums roll_number dob(yyyy-mm-dd)` \n\nExample \n\n`ums cb.en.u4cse17xxx 1990-08-31` ";
             $bot->sendMessage($from, $reply, "markdown");
@@ -15,7 +14,7 @@ class AUMS
             $credentials = substr($message, 4, strlen($message));
             $username = explode(" ", $credentials)[0];
             $dob = explode(" ", $credentials)[1];
-            return DB_Query::getUser($from, $username, $dob);
+            return $repo->getUser($from, $username, $dob);
 
 //            $ajaxURL = "https://amritavidya.amrita.edu:8444/DataServices/rest/authRes?rollno=".$username."&dob=".$dob."&user_type=Student";
 //            $headers = [

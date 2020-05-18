@@ -3,14 +3,13 @@
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
-namespace Classes;
-
 use GuzzleHttp\Client;
 use PDO;
 
 define('AUTHORIZATION', 'Basic YWRtaW46YWRtaW5AQW5kQVBQ');
+define('LOGIN_TOKEN', 'logintoken');
 
-class DB_Query
+class AUMSRepository
 {
     private $db;
     private $conn;
@@ -31,7 +30,7 @@ class DB_Query
     {
         $getToken = $this->conn->prepare("SELECT token FROM aums WHERE id=?");
         $getToken->execute([$userId]);
-        return $getToken->fetchAll(PDO::FETCH_OBJ);
+        return $getToken->fetchAll(PDO::FETCH_OBJ) ?? LOGIN_TOKEN;
     }
 
     public function setAccessToken($userId)
@@ -52,3 +51,4 @@ class DB_Query
         return $res->NAME;
     }
 }
+

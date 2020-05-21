@@ -21,6 +21,7 @@ class Database
         $this->DB_PASS = DB_PASSWORD;
         $this->DB_USER = DB_USERNAME;
         $this->connection = $this->connect();
+        $this->loadMigrations();
     }
 
     /**
@@ -32,6 +33,30 @@ class Database
         $conn = new PDO("mysql:host=$this->DB_SERVER;dbname=$this->DB_NAME", $this->DB_USER, $this->DB_PASS);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $conn;
+    }
+
+    /**
+     * Load initial migrations for creating tables
+     */
+    public function loadMigrations()
+    {
+        $migrations = ["CREATE TABLE IF NOT EXISTS `aums` (
+                          `id` bigint(255) NOT NULL,
+                          `username` varchar(255) NOT NULL,
+                          `name` varchar(255) NOT NULL,
+                          `email` varchar(255) NOT NULL,
+                          `token` text NOT NULL,
+                          `attendanceSem` text NOT NULL,
+                          `gradeSem` text NOT NULL,
+                          PRIMARY KEY (`id`)
+                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+        ];
+
+        $this->connection->beginTransaction();
+        foreach ($migrations as $migration) {
+            $this->connection->exec($migration);
+        }
+        $this->connection->commit();
     }
 
     /**

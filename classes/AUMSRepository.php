@@ -13,6 +13,7 @@ class AUMSRepository
 {
     private $db;
     private $conn;
+    private $client;
 
     /**
      * Constructor.

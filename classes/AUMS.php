@@ -14,85 +14,49 @@ class AUMS
             $credentials = substr($message, 4, strlen($message));
             $username = explode(" ", $credentials)[0];
             $dob = explode(" ", $credentials)[1];
-            return $repo->getUser($from, $username, $dob);
-
-//            $ajaxURL = "https://amritavidya.amrita.edu:8444/DataServices/rest/authRes?rollno=".$username."&dob=".$dob."&user_type=Student";
-//            $headers = [
-//                'Authorization'=> AUTHORIZATION,
-//                'token'=> TOKEN,
-//            ];
-//            $client = new Client([
-//                'headers'=>$headers
-//            ]);
-//            $response = $client->get($ajaxURL);
-//            if($response->getStatusCode()==200)
-//            {
-//                $data = json_decode($response->getBody());
-//                if($data->Status=="OK")
-//                {
-//
-//                    $userData = array($from=>array('UserName'=>$username,'Name'=>$data->NAME , 'Email'=> $data->Email));
-//                    $writeToFile=json_encode($userData);
-//                    file_put_contents('userData.json', $writeToFile);
-//                    $reply="Hola ".$data->NAME."! Enter OTP to Continue \t ( /umsotp xxxxx )\n\nExample /umsotp 12345";
-//                    $bot->sendMessage($from, $reply, "markdown");
-//                }
-//                else{
-//                    $reply=$data->Status." ! \nTry Again...";
-//                    $bot->sendMessage($from, $reply, "markdown");
-//                    return;
-//                }
-//
-//            }
-//            else{
-//                $reply="Something Went Wrong";
-//                $bot->sendMessage($from, $reply, "markdown");
-//                return;
-//            }
-//
-        } else if (sizeof(explode(" ", $message)) == 2 and (explode(" ", $message)[0] == "/umsotp")) {
-            $otp = explode(" ", $message)[1];
-            $userData = file_get_contents('userData.json');
-            $jsonData = json_decode($userData, true);
-            $ajaxURL = "https://amritavidya.amrita.edu:8444/DataServices/rest/authRes/register?rollno=" . $jsonData[$from]['UserName'] . "&otp=" . $otp;
-            $headers = [
-                'Authorization' => constant('AUTHORIZATION'),
-                'token' => constant('TOKEN'),
-            ];
-            $client = new Client([
-                'headers' => $headers
-            ]);
-            $response = $client->get($ajaxURL);
-            if ($response->getStatusCode() == 200) {
-                $data = json_decode($response->getBody());
-                if ($data->Status == "Y") {
-                    $userData = file_get_contents('userData.json');
-                    $jsonData = json_decode($userData, true);
-                    $jsonData[$from]['Token'] = $data->Token;
-                    file_put_contents('userData.json', json_encode($jsonData));
-                    $reply = "Hurray! Login Successful \nFor Attendance /ums_a\nFor Grades /ums_g";
-                    $bot->sendMessage($from, $reply, "markdown");
-                    $ajaxURL = "https://amritavidya.amrita.edu:8444/DataServices/rest/authRes/register?rollno=" . $jsonData[$from]['UserName'];
-                    $headers = [
-                        'Authorization' => AUTHORIZATION,
-                        'token' => $jsonData[$from]['Token']
-                    ];
-                    $client = new Client([
-                        'headers' => $headers
-                    ]);
-                    $response = $client->get($ajaxURL);
-                } else {
-                    $reply = "Incorrect OTP...";
-                    $bot->sendMessage($from, $reply, "markdown");
-                    return;
-                }
+            $data = $repo->getUser($from, $username, $dob);
+            if ($data->Status == "OK") {
+                $repo->setUserData($from, $username, $data->NAME, $data->Email, LOGIN_TOKEN);
+                $reply = "Hola " . $data->NAME . "! Enter OTP to Continue \t ( /umsotp xxxxx )\n\nExample /umsotp 12345";
+                $bot->sendMessage($from, $reply, "markdown");
             } else {
-                $reply = "Oh, the request failed.";
+                $reply = $data . " ! \nTry Again...";
                 $bot->sendMessage($from, $reply, "markdown");
                 return;
             }
-        } else {
-            global $reply;
+
+        } else if (sizeof(explode(" ", $message)) == 2 and (explode(" ", $message)[0] == "/umsotp")) {
+            $otp = explode(" ", $message)[1];
+
+            $data = $repo->validateOTP($from, $otp);
+            if ($data->Status == "Y") {
+                $repo->setAccessToken($from, $data->Token);
+                $reply = "Hurray! Login Successful \nFor Attendance /ums\_a\nFor Grades /ums\_g";
+                $bot->sendMessage($from, $reply, "markdown");
+            } else {
+                $reply = "Incorrect OTP...";
+                $bot->sendMessage($from, $reply, "markdown");
+                return;
+            }
+
+        } else if ($message == "/ums_a") {
+            $res = $repo->getSemesterAttendance($from);
+            $i = 1;
+            $reply = "Choose Semester";
+            foreach ($res as $result) {
+                if ($i == sizeof($res))
+                    break;
+                $reply .= "\n\n$result->Period\n( /ums\_a\_" . $result->Semester . " )";
+            }
+            $bot->sendMessage($from, $reply, "markdown");
+            return;
+        } else if (sizeof(explode("_", $message)) == 3 and (explode("_", $message)[0] == "/ums") and (explode("_", $message)[1] == "a")) {
+            $sem = explode("_", $message)[2];
+
+        } else if ($message == "/ums_g") {
+            $reply = "Grade";
+            $bot->sendMessage($from, $reply, "markdown");
+            return;
         }
 
 

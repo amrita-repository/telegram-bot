@@ -104,5 +104,59 @@ class AUMSRepository
             return $res->Semester;
         }
     }
+
+    public function getAttendance($userId, $sem)
+    {
+        $username = $this->getUsername($userId);
+        $token = $this->getAccessToken($userId);
+        $response = $this->client->get("attRes?rollno=" . $username . "&sem=" . $sem, [
+            'headers' => [
+                'Authorization' => AUTHORIZATION,
+                'token' => $token
+            ]
+        ]);
+        $this->conn->beginTransaction();
+        if ($response->getStatusCode() == 200) {
+            $res = json_decode($response->getBody());
+            $this->setAccessToken($userId, $res->Token);
+            return $res;
+        }
+    }
+
+    public function getSemesterGrade($userId)
+    {
+        $username = $this->getUsername($userId);
+        $token = $this->getAccessToken($userId);
+        $response = $this->client->get("semRes?rollno=" . $username, [
+            'headers' => [
+                'Authorization' => AUTHORIZATION,
+                'token' => $token
+            ]
+        ]);
+        $this->conn->beginTransaction();
+        if ($response->getStatusCode() == 200) {
+            $res = json_decode($response->getBody());
+            $this->setAccessToken($userId, $res->Token);
+            return $res->Semester;
+        }
+    }
+
+    public function getGrade($userId, $sem)
+    {
+        $username = $this->getUsername($userId);
+        $token = $this->getAccessToken($userId);
+        $response = $this->client->get("andRes?rollno=" . $username . "&sem=" . $sem, [
+            'headers' => [
+                'Authorization' => AUTHORIZATION,
+                'token' => $token
+            ]
+        ]);
+        $this->conn->beginTransaction();
+        if ($response->getStatusCode() == 200) {
+            $res = json_decode($response->getBody());
+            $this->setAccessToken($userId, $res->Token);
+            return $res;
+        }
+    }
 }
 

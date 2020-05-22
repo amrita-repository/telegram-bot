@@ -41,20 +41,37 @@ class AUMS
 
         } else if ($message == "/ums_a") {
             $res = $repo->getSemesterAttendance($from);
-            $i = 1;
             $reply = "Choose Semester";
             foreach ($res as $result) {
-                if ($i == sizeof($res))
-                    break;
-                $reply .= "\n\n$result->Period\n( /ums\_a\_" . $result->Semester . " )";
+                $reply .= "\n\nSemester " . $result->Semester . " - /ums\_a\_" . $result->Id;
             }
             $bot->sendMessage($from, $reply, "markdown");
             return;
         } else if (sizeof(explode("_", $message)) == 3 and (explode("_", $message)[0] == "/ums") and (explode("_", $message)[1] == "a")) {
             $sem = explode("_", $message)[2];
-
+            $reply = "Attendance Details";
+            $res = $repo->getAttendance($from, $sem);
+            foreach ($res->Values as $result) {
+                $reply .= "\n\n" . $result->CourseCode . "\n" . $result->CourseName . "\nClass Attended : `" . $result->ClassPresent . "` / `" . $result->ClassTotal . "`\nPercentage : `" . $result->TotalPercentage . "` %";
+            }
+            $bot->sendMessage($from, $reply, "markdown");
+            return;
         } else if ($message == "/ums_g") {
-            $reply = "Grade";
+            $res = $repo->getSemesterGrade($from);
+            $reply = "Choose Semester";
+            foreach ($res as $result) {
+                $reply .= "\n\nSemester " . $result->Semester . " - /ums\_g\_" . $result->Id;
+            }
+            $bot->sendMessage($from, $reply, "markdown");
+            return;
+        } else if (sizeof(explode("_", $message)) == 3 and (explode("_", $message)[0] == "/ums") and (explode("_", $message)[1] == "g")) {
+            $sem = explode("_", $message)[2];
+            $reply = "Grade Details";
+            $res = $repo->getGrade($from, $sem);
+            var_dump($res);
+            foreach ($res->Subject as $result) {
+                $reply .= "\n\n" . $result->CourseCode . "\n" . $result->CourseName . "\nGrade Obtained : " . $result->Grade;
+            }
             $bot->sendMessage($from, $reply, "markdown");
             return;
         }

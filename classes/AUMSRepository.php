@@ -50,7 +50,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody());
         }
@@ -79,7 +79,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody());
         }
@@ -96,7 +96,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -114,7 +114,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -132,7 +132,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -150,7 +150,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->beginTransaction();
+        $this->conn->commit();
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);

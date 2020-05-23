@@ -38,7 +38,7 @@ class AUMSRepository
     {
         $setToken = $this->conn->prepare("UPDATE aums SET token =? WHERE id=?");
         $setToken->execute([$token, $userId]);
-        $this->conn->commit();
+
     }
 
     public function getUser($userId, $username, $dob)
@@ -60,7 +60,7 @@ class AUMSRepository
     {
         $setData = $this->conn->prepare("INSERT IGNORE INTO aums (id,username,name,email,token) VALUES (?,?,?,?,?);");
         $setData->execute([$userId, $username, $name, $email, $token]);
-        $this->conn->commit();
+
     }
 
     public function getUsername($userId)
@@ -79,7 +79,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->commit();
+
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody());
         }
@@ -96,7 +96,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->commit();
+
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -114,7 +114,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->commit();
+
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -132,7 +132,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->commit();
+
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -150,7 +150,7 @@ class AUMSRepository
                 'token' => $token
             ]
         ]);
-        $this->conn->commit();
+
         if ($response->getStatusCode() == 200) {
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
@@ -162,7 +162,7 @@ class AUMSRepository
     {
         $setData = $this->conn->prepare("DELETE FROM aums WHERE id =?;");
         $setData->execute([$userId]);
-        $this->conn->commit();
+
     }
 
     public function checkUser($userId)

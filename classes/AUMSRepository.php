@@ -69,7 +69,6 @@ class AUMSRepository
         $getUsername->execute([$userId]);
         return $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->username;
     }
-
     public function validateOTP($userId, $otp)
     {
         $username = $this->getUsername($userId);
@@ -156,6 +155,25 @@ class AUMSRepository
             $res = json_decode($response->getBody());
             $this->setAccessToken($userId, $res->Token);
             return $res;
+        }
+    }
+
+    public function clearUserData($userId)
+    {
+        $setData = $this->conn->prepare("DELETE FROM aums WHERE id =?;");
+        $setData->execute([$userId]);
+        $this->conn->commit();
+    }
+
+    public function checkUser($userId)
+    {
+        $getUsername = $this->conn->prepare("SELECT token FROM aums WHERE id=?");
+        $getUsername->execute([$userId]);
+        $res = $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->token;
+        if ($res != LOGIN_TOKEN and $res != NULL) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

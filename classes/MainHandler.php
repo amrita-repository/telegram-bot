@@ -35,10 +35,9 @@ class MainHandler
             } else if ((strpos($smallerMessage, "qpapers") !== false) || (strpos($smallerMessage, "qd") !== false)) {
                 QPapers::handle($smallerMessage, $from, $bot);
                 return;
-            }else if ((strpos($smallerMessage, "ums") !== false)) {
+            } else if ((strpos($smallerMessage, "ums") !== false)) {
                 AUMS::handle($smallerMessage, $from, $bot);
-            }
-            else if ((strpos($smallerMessage, "ft") !== false)) {
+            } else if ((strpos($smallerMessage, "ft") !== false)) {
                 FacultyTimetable::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "news") !== false)) {
                 News::handle($from, $smallerMessage, $bot);

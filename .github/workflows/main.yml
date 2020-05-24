@@ -13,20 +13,14 @@ jobs:
     - name: SSH and deploy AmritaRepo Bot
       uses: appleboy/ssh-action@master
       env:
-        LOCALPATH: ${{ secrets.LOCALPATH }}
-        REMOTEDIR: ${{ secrets.REMOTEDIR }}
-        FTP_USER: ${{ secrets.FTP_USER }}
-        FTP_PASS: ${{ secrets.FTP_PASS }}
-        FTP_HOST: ${{ secrets.FTP_HOST }}
-        FTP_BIN: ${{ secrets.FTP_BIN }}
+        PATH: ${{ secrets.LOCALPATH }}
         STAR: "\n************************************************************************************\n"
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script_stop: true
-        envs: LOCALPATH,REMOTEDIR,FTP_USER,FTP_PASS,FTP_HOST,FTP_BIN,STAR
+        envs: PATH
         script: |
-          cd ~/amritarepo-bot
+          cd $PATH
           git pull origin master
-          for filename in $LOCALPATH; do NAME=${filename##/*/}; case "$NAME" in "docs" | "vendor" | "access.log" | "error.log" | "config.php") ;; *) `$FTP_BIN -m -R -u $FTP_USER -p $FTP_PASS $FTP_HOST $REMOTEDIR $filename`; echo -e "${STAR}Copied $filename${STAR}";; esac done

@@ -13,14 +13,14 @@ jobs:
     - name: SSH and deploy AmritaRepo Bot
       uses: appleboy/ssh-action@master
       env:
-        PATH: ${{ secrets.LOCALPATH }}
+        LOCALPATH: ${{ secrets.LOCALPATH }}
         STAR: "\n************************************************************************************\n"
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script_stop: true
-        envs: PATH
+        envs: LOCALPATH
         script: |
-          cd $PATH
+          cd $LOCALPATH
           git pull origin master

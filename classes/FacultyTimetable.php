@@ -27,7 +27,7 @@ class FacultyTimetable
                 return;
             }
             foreach ($options as $option) {
-                if ($i == min(15, sizeof($options))) break;
+                if ($i == sizeof($options)) break;
                 $reply .= "\n\n" . $i . ") " . $option . " (/ft_" . $query . "_$i" . ")";
                 $i++;
             }
@@ -48,7 +48,7 @@ class FacultyTimetable
 
     public static function getSearchResults($query)
     {
-        $ajaxURL = "https://intranet.cb.amrita.edu/TimeTable/Faculty/get_staff_list.php?limit=10&q=" . $query;
+        $ajaxURL = "https://intranet.cb.amrita.edu/TimeTable/Faculty/get_staff_list.php?q=" . $query;
         $client = new Client();
         $response = $client->get($ajaxURL);
         return (empty(trim($response->getBody())) ? "" : explode("\n", $response->getBody()));

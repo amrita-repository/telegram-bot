@@ -155,6 +155,8 @@ class Analytics
             return "👨‍🏫  Faculty Timetable";
         } else if ((strpos($message, "news") !== false)) {
             return "📰️ News";
+        } else if ((strpos($message, "ums") !== false)) {
+            return "💻️ AUMS";
         } else if ((strpos($message, "thank") !== false)) {
             return "🙏️ Thanks";
         } else {

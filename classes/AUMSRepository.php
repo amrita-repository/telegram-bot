@@ -43,7 +43,7 @@ class AUMSRepository
     {
         $getToken = $this->conn->prepare("SELECT token FROM aums WHERE id = ?");
         $getToken->execute([$userId]);
-        return $getToken->fetchAll(PDO::FETCH_OBJ)[0]->token ?? LOGIN_TOKEN;
+        return $getToken->fetch(PDO::FETCH_OBJ)->token ?? LOGIN_TOKEN;
     }
 
     public function setUserData($userId, $username, $name, $email, $token)
@@ -72,7 +72,7 @@ class AUMSRepository
     {
         $getUsername = $this->conn->prepare("SELECT username FROM aums WHERE id = ?");
         $getUsername->execute([$userId]);
-        return $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->username;
+        return $getUsername->fetch(PDO::FETCH_OBJ)->username;
     }
 
     public function getSemesterAttendance($userId)

@@ -9,3 +9,8 @@ define("MASTER_USERNAME", ""); // Insert your Telegram username if you've one
 define("HASH", "");  //You can safely ignore this.
 define("SHOULD_PROXY", false); // Default value is false
 
+// The below DB creds are required when you want to test AUMS.
+define("DB_HOST", "127.0.0.1");
+define("DB_NAME", "amritarepo-bot");
+define("DB_PASSWORD", "");
+define("DB_USERNAME", "root");

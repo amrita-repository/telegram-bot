@@ -35,6 +35,8 @@ class MainHandler
             } else if ((strpos($smallerMessage, "qpapers") !== false) || (strpos($smallerMessage, "qd") !== false)) {
                 QPapers::handle($smallerMessage, $from, $bot);
                 return;
+            } else if ((strpos($smallerMessage, "ums") !== false)) {
+                AUMS::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "ft") !== false)) {
                 FacultyTimetable::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "news") !== false)) {
@@ -81,6 +83,7 @@ class MainHandler
         $start = "\n\nAll set! How shall I help you ? Please click a command from the options below\n";
         $start .= "\n📅   /actimetable - Student Timetable ";
         $start .= "\n\n📝   /qpapersc - Question papers ";
+        $start .= "\n\n💻️   /ums - AUMS ";
         $start .= "\n\n👨‍🏫   /ft - Faculty Timetable ";
         $start .= "\n\n📰   /news - News capsules ";
         $start .= "\n\nDeveloped with ❤ by @rajkumaar23";

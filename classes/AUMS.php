@@ -25,7 +25,7 @@ class AUMS
                 $reply = "Hola " . trim($data->NAME) . "!\nEnter OTP to continue \t ( /umsotp xxxxx )\n\n`Example: /umsotp 12345`";
                 $bot->sendMessage($from, $reply, "markdown");
             } else {
-                $reply = $data . " ! \nTry Again...";
+                $reply = "Hey! Your credentials are invalid. Please try again.";
                 $bot->sendMessage($from, $reply, "markdown");
             }
         } else if (sizeof(explode(" ", $message)) == 2 && (explode(" ", $message)[0] == "/umsotp")) {

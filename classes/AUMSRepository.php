@@ -4,7 +4,6 @@
  */
 
 use GuzzleHttp\Client;
-use PDO;
 
 define('AUTHORIZATION', 'Basic YWRtaW46YWRtaW5AQW5kQVBQ');
 define('LOGIN_TOKEN', 'logintoken');
@@ -27,20 +26,6 @@ class AUMSRepository
         $this->conn = $this->db->getConnection();
     }
 
-    public function getAccessToken($userId)
-    {
-        $getToken = $this->conn->prepare("SELECT token FROM aums WHERE id=?");
-        $getToken->execute([$userId]);
-        return $getToken->fetchAll(PDO::FETCH_OBJ)[0]->token ?? LOGIN_TOKEN;
-    }
-
-    public function setAccessToken($userId, $token)
-    {
-        $setToken = $this->conn->prepare("UPDATE aums SET token =? WHERE id=?");
-        $setToken->execute([$token, $userId]);
-
-    }
-
     public function getUser($userId, $username, $dob)
     {
         $token = $this->getAccessToken($userId);
@@ -48,27 +33,27 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
-        $this->conn->commit();
-        if ($response->getStatusCode() == 200) {
-            return json_decode($response->getBody());
-        }
+        return json_decode($response->getBody());
+    }
+
+    public function getAccessToken($userId)
+    {
+        $getToken = $this->conn->prepare("SELECT token FROM aums WHERE id = ?");
+        $getToken->execute([$userId]);
+        return $getToken->fetchAll(PDO::FETCH_OBJ)[0]->token ?? LOGIN_TOKEN;
     }
 
     public function setUserData($userId, $username, $name, $email, $token)
     {
-        $setData = $this->conn->prepare("INSERT IGNORE INTO aums (id,username,name,email,token) VALUES (?,?,?,?,?);");
+        $setData = $this->conn->prepare(
+            "INSERT INTO aums (id,username,name,email,token) VALUES (?,?,?,?,?)
+                        ON DUPLICATE KEY UPDATE username = VALUES(username), name = VALUES(name), email = VALUES(email), token = VALUES(token)");
         $setData->execute([$userId, $username, $name, $email, $token]);
-
     }
 
-    public function getUsername($userId)
-    {
-        $getUsername = $this->conn->prepare("SELECT username FROM aums WHERE id=?");
-        $getUsername->execute([$userId]);
-        return $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->username;
-    }
     public function validateOTP($userId, $otp)
     {
         $username = $this->getUsername($userId);
@@ -77,13 +62,17 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
+        return json_decode($response->getBody());
+    }
 
-        if ($response->getStatusCode() == 200) {
-            return json_decode($response->getBody());
-        }
-
+    public function getUsername($userId)
+    {
+        $getUsername = $this->conn->prepare("SELECT username FROM aums WHERE id = ?");
+        $getUsername->execute([$userId]);
+        return $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->username;
     }
 
     public function getSemesterAttendance($userId)
@@ -94,14 +83,18 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
+        $res = json_decode($response->getBody());
+        $this->setAccessToken($userId, $res->Token);
+        return $res->Semester;
+    }
 
-        if ($response->getStatusCode() == 200) {
-            $res = json_decode($response->getBody());
-            $this->setAccessToken($userId, $res->Token);
-            return $res->Semester;
-        }
+    public function setAccessToken($userId, $token)
+    {
+        $setToken = $this->conn->prepare("UPDATE aums SET token = ? WHERE id = ?");
+        $setToken->execute([$token, $userId]);
     }
 
     public function getAttendance($userId, $sem)
@@ -112,14 +105,13 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
 
-        if ($response->getStatusCode() == 200) {
-            $res = json_decode($response->getBody());
-            $this->setAccessToken($userId, $res->Token);
-            return $res;
-        }
+        $res = json_decode($response->getBody());
+        $this->setAccessToken($userId, $res->Token);
+        return $res;
     }
 
     public function getSemesterGrade($userId)
@@ -130,14 +122,12 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
-
-        if ($response->getStatusCode() == 200) {
-            $res = json_decode($response->getBody());
-            $this->setAccessToken($userId, $res->Token);
-            return $res->Semester;
-        }
+        $res = json_decode($response->getBody());
+        $this->setAccessToken($userId, $res->Token);
+        return $res->Semester;
     }
 
     public function getGrade($userId, $sem)
@@ -148,33 +138,23 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ]
+            ],
+            'allow_redirects' => true
         ]);
-
-        if ($response->getStatusCode() == 200) {
-            $res = json_decode($response->getBody());
-            $this->setAccessToken($userId, $res->Token);
-            return $res;
-        }
+        $res = json_decode($response->getBody());
+        $this->setAccessToken($userId, $res->Token);
+        return $res;
     }
 
     public function clearUserData($userId)
     {
-        $setData = $this->conn->prepare("DELETE FROM aums WHERE id =?;");
+        $setData = $this->conn->prepare("DELETE FROM aums WHERE id  = ?");
         $setData->execute([$userId]);
-
     }
 
     public function checkUser($userId)
     {
-        $getUsername = $this->conn->prepare("SELECT token FROM aums WHERE id=?");
-        $getUsername->execute([$userId]);
-        $res = $getUsername->fetchAll(PDO::FETCH_OBJ)[0]->token;
-        if ($res != LOGIN_TOKEN and $res != NULL) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getAccessToken($userId) != LOGIN_TOKEN;
     }
 }
 

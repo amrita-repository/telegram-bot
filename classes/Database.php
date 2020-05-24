@@ -4,8 +4,6 @@
  */
 
 
-use PDO;
-
 class Database
 {
     public $connection;
@@ -40,16 +38,8 @@ class Database
      */
     public function loadMigrations()
     {
-        $migrations = ["CREATE TABLE IF NOT EXISTS `aums` (
-                          `id` bigint(255) NOT NULL,
-                          `username` varchar(255) NOT NULL,
-                          `name` varchar(255) NOT NULL,
-                          `email` varchar(255) NOT NULL,
-                          `token` text NOT NULL,
-                          `attendanceSem` text NOT NULL,
-                          `gradeSem` text NOT NULL,
-                          PRIMARY KEY (`id`)
-                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+        $migrations = [
+            "CREATE TABLE IF NOT EXISTS `aums` ( `id` bigint(255) NOT NULL, `username` varchar(255) NOT NULL, `name` varchar(255) DEFAULT NULL, `email` varchar(255) DEFAULT NULL, `token` text DEFAULT NULL, PRIMARY KEY (`id`))"
         ];
 
         $this->connection->beginTransaction();

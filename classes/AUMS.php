@@ -1,106 +1,88 @@
 <?php
-use GuzzleHttp\Client;
+/**
+ * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
+ */
+
+define("AUMS_MENU", "Here's the menu \n\n➡️ For Attendance /ums\_a\n\n➡️ For Grades /ums\_g\n\n➡️ Logout /ums\_logout\n\n`Disclaimer : AUMS API isn't stable and fails miserably sometimes.`");
+define("LOGIN_MENU", "Send your AUMS credentials in this format\n`ums roll_number dob(yyyy-mm-dd)` \n\nExample\n`ums cb.en.u4cse17xxx 1990-08-31` ");
+define("NOT_AVAILABLE", "I couldn't find data for your requested semester 😓️");
 
 class AUMS
 {
     public static function handle($message, $from, $bot)
     {
         $repo = new AUMSRepository();
+        $res = $repo->checkUser($from);
         if ($message == "ums" || $message == "/ums") {
-            $res = $repo->checkUser($from);
-            if ($res) {
-                $reply = "For Attendance /ums\_a\n\nFor Grades /ums\_g\n\nTo Logout /ums\_logout";
-                $bot->sendMessage($from, $reply, "markdown");
-                return;
-            } else {
-
-                $reply = "Send your AUMS credentials in this format\n\n`ums roll_number dob(yyyy-mm-dd)` \n\nExample \n\n`ums cb.en.u4cse17xxx 1990-08-31` ";
-                $bot->sendMessage($from, $reply, "markdown");
-                return;
-            }
-
-
-        } else if (sizeof(explode(" ", $message)) == 3 and ((explode(" ", $message)[0] == "ums") || (explode(" ", $message)[0] == "/ums"))) {
-            $credentials = substr($message, 4, strlen($message));
-            $username = explode(" ", $credentials)[0];
-            $dob = explode(" ", $credentials)[1];
+            $bot->sendMessage($from, empty($res) ? LOGIN_MENU : AUMS_MENU, "markdown");
+        } else if (sizeof(explode(" ", $message)) == 3 && ((explode(" ", $message)[0] == "ums") || (explode(" ", $message)[0] == "/ums"))) {
+            $credentials = explode(" ", trim(substr($message, 4, strlen($message))));
+            $username = $credentials[0];
+            $dob = $credentials[1];
             $data = $repo->getUser($from, $username, $dob);
             if ($data->Status == "OK") {
                 $repo->setUserData($from, $username, $data->NAME, $data->Email, LOGIN_TOKEN);
-                $reply = "Hola " . $data->NAME . "! Enter OTP to Continue \t ( /umsotp xxxxx )\n\nExample /umsotp 12345";
+                $reply = "Hola " . trim($data->NAME) . "! Enter OTP to continue \t ( /umsotp xxxxx )\n\n`Example /umsotp 12345`";
                 $bot->sendMessage($from, $reply, "markdown");
             } else {
                 $reply = $data . " ! \nTry Again...";
                 $bot->sendMessage($from, $reply, "markdown");
-                return;
             }
-
-        } else if (sizeof(explode(" ", $message)) == 2 and (explode(" ", $message)[0] == "/umsotp")) {
+        } else if (sizeof(explode(" ", $message)) == 2 && (explode(" ", $message)[0] == "/umsotp")) {
             $otp = explode(" ", $message)[1];
-
             $data = $repo->validateOTP($from, $otp);
             if ($data->Status == "Y") {
                 $repo->setAccessToken($from, $data->Token);
-                $reply = "Hurray! Login Successful \n\nFor Attendance /ums\_a\n\nFor Grades /ums\_g\n\nLogout /ums\_logout";
+                $reply = "Hurray! You have been logged into AUMS successfully!\n\n" . AUMS_MENU;
                 $bot->sendMessage($from, $reply, "markdown");
             } else {
                 $reply = "Incorrect OTP...";
                 $bot->sendMessage($from, $reply, "markdown");
-                return;
             }
-
+        } else if (empty($res)) {
+            $bot->sendMessage($from, LOGIN_MENU, "markdown");
         } else if ($message == "/ums_a") {
             $res = $repo->getSemesterAttendance($from);
-            $reply = "Choose Semester";
+            $reply = "Choose your semester for viewing attendance";
             foreach ($res as $result) {
-                $reply .= "\n\nSemester " . $result->Semester . " - /ums\_a\_" . $result->Id;
+                $reply .= "\n\n*Semester " . $result->Semester . "* - /ums\_a\_" . $result->Id;
             }
             $bot->sendMessage($from, $reply, "markdown");
-            return;
-        } else if (sizeof(explode("_", $message)) == 3 and (explode("_", $message)[0] == "/ums") and (explode("_", $message)[1] == "a")) {
+        } else if (sizeof(explode("_", $message)) == 3 && (explode("_", $message)[0] == "/ums") && (explode("_", $message)[1] == "a")) {
             $sem = explode("_", $message)[2];
-            $reply = "Attendance Details";
+            $reply = "Here are your attendance details";
             $res = $repo->getAttendance($from, $sem);
             foreach ($res->Values as $result) {
-                $reply .= "\n\n" . $result->CourseCode . " - " . $result->CourseName . "\nClass Attended : `" . $result->ClassPresent . "` / `" . $result->ClassTotal . "`\nPercentage : `" . $result->TotalPercentage . "` %";
+                $reply .= "\n\n$result->CourseCode - $result->CourseName \nClass Attended : `" . intval($result->ClassPresent) . "` / `" . intval($result->ClassTotal) . "`\nPercentage : `" . $result->TotalPercentage . "` %";
             }
-            if (empty($result))
-                $reply .= " Not Available";
+            if (empty($res->Values))
+                $reply = NOT_AVAILABLE;
             $bot->sendMessage($from, $reply, "markdown");
-            return;
         } else if ($message == "/ums_g") {
             $res = $repo->getSemesterGrade($from);
-            $reply = "Choose Semester";
+            $reply = "Choose your semester for viewing grades";
             foreach ($res as $result) {
                 $reply .= "\n\nSemester " . $result->Semester . " - /ums\_g\_" . $result->Id;
             }
-
             $bot->sendMessage($from, $reply, "markdown");
-            return;
-        } else if (sizeof(explode("_", $message)) == 3 and (explode("_", $message)[0] == "/ums") and (explode("_", $message)[1] == "g")) {
+        } else if (sizeof(explode("_", $message)) == 3 && (explode("_", $message)[0] == "/ums") && (explode("_", $message)[1] == "g")) {
             $sem = explode("_", $message)[2];
             $reply = "Grade Details";
             $res = $repo->getGrade($from, $sem);
             foreach ($res->Subject as $result) {
-                $reply .= "\n\n" . $result->CourseCode . " - " . $result->CourseName . "\nGrade Obtained : `" . $result->Grade . "`";
+                $reply .= "\n\n$result->CourseCode - $result->CourseName \nGrade Obtained : *$result->Grade*";
             }
-            if (empty($result))
-                $reply .= " Not Available";
+            if (empty($res->Subject))
+                $reply = NOT_AVAILABLE;
             $bot->sendMessage($from, $reply, "markdown");
-            return;
         } else if ($message == "/ums_logout") {
-
-            $reply = "Logout Successful";
+            $reply = "You have been logged out of AUMS successfully!";
             $repo->clearUserData($from);
             $bot->sendMessage($from, $reply, "markdown");
-            return;
         } else {
-            $reply = "Oops! The Request Failed.";
-            $bot->sendMessage($from, $reply, "markdown");
-            return;
+            global $reply;
+            $bot->sendMessage($from, $reply);
         }
-
-
     }
 }
 

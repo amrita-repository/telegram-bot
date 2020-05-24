@@ -22,7 +22,7 @@ class AUMS
             $data = $repo->getUser($from, $username, $dob);
             if ($data->Status == "OK") {
                 $repo->setUserData($from, $username, $data->NAME, $data->Email, LOGIN_TOKEN);
-                $reply = "Hola " . trim($data->NAME) . "! Enter OTP to continue \t ( /umsotp xxxxx )\n\n`Example /umsotp 12345`";
+                $reply = "Hola " . trim($data->NAME) . "!\nEnter OTP to continue \t ( /umsotp xxxxx )\n\n`Example: /umsotp 12345`";
                 $bot->sendMessage($from, $reply, "markdown");
             } else {
                 $reply = $data . " ! \nTry Again...";

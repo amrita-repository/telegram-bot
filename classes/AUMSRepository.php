@@ -110,7 +110,7 @@ class AUMSRepository
     public function getAttendance($userId, $sem)
     {
         $username = $this->getUsername($userId);
-        $cache = $this->redis->get($username . ":attRes");
+        $cache = $this->redis->get($username . ":attRes:" . $sem);
         if ($cache) {
             return json_decode($cache);
         }
@@ -125,7 +125,7 @@ class AUMSRepository
 
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
-        $this->redis->setValue($username . ":attRes", json_encode($res));
+        $this->redis->setValue($username . ":attRes:" . $sem, json_encode($res));
         return $res;
     }
 
@@ -153,7 +153,7 @@ class AUMSRepository
     public function getGrade($userId, $sem)
     {
         $username = $this->getUsername($userId);
-        $cache = $this->redis->get($username . ":andRes");
+        $cache = $this->redis->get($username . ":andRes:" . $sem);
         if ($cache) {
             return json_decode($cache);
         }
@@ -167,7 +167,7 @@ class AUMSRepository
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
-        $this->redis->setValue($username . ":andRes", json_encode($res));
+        $this->redis->setValue($username . ":andRes:" . $sem, json_encode($res));
         return $res;
     }
 

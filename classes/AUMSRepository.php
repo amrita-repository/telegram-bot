@@ -13,6 +13,10 @@ class AUMSRepository
     private $db;
     private $conn;
     private $client;
+    /**
+     * @var RedisUtils
+     */
+    private $redis;
 
     /**
      * Constructor.
@@ -24,6 +28,7 @@ class AUMSRepository
             'base_uri' => "https://amritavidya.amrita.edu:8444/DataServices/rest/"
         ]);
         $this->conn = $this->db->getConnection();
+        $this->redis = new RedisUtils();
     }
 
     public function getUser($userId, $username, $dob)
@@ -78,6 +83,10 @@ class AUMSRepository
     public function getSemesterAttendance($userId)
     {
         $username = $this->getUsername($userId);
+        $cache = $this->redis->get($username . ":semAtdRes");
+        if ($cache) {
+            return json_decode($cache);
+        }
         $token = $this->getAccessToken($userId);
         $response = $this->client->get("semAtdRes?rollno=" . $username, [
             'headers' => [
@@ -88,6 +97,7 @@ class AUMSRepository
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
+        $this->redis->setValue($username . ":semAtdRes", json_encode($res->Semester));
         return $res->Semester;
     }
 
@@ -100,6 +110,10 @@ class AUMSRepository
     public function getAttendance($userId, $sem)
     {
         $username = $this->getUsername($userId);
+        $cache = $this->redis->get($username . ":attRes");
+        if ($cache) {
+            return json_decode($cache);
+        }
         $token = $this->getAccessToken($userId);
         $response = $this->client->get("attRes?rollno=" . $username . "&sem=" . $sem, [
             'headers' => [
@@ -111,12 +125,17 @@ class AUMSRepository
 
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
+        $this->redis->setValue($username . ":attRes", json_encode($res));
         return $res;
     }
 
     public function getSemesterGrade($userId)
     {
         $username = $this->getUsername($userId);
+        $cache = $this->redis->get($username . ":semRes");
+        if ($cache) {
+            return json_decode($cache);
+        }
         $token = $this->getAccessToken($userId);
         $response = $this->client->get("semRes?rollno=" . $username, [
             'headers' => [
@@ -127,12 +146,17 @@ class AUMSRepository
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
+        $this->redis->setValue($username . ":semRes", json_encode($res->Semester));
         return $res->Semester;
     }
 
     public function getGrade($userId, $sem)
     {
         $username = $this->getUsername($userId);
+        $cache = $this->redis->get($username . ":andRes");
+        if ($cache) {
+            return json_decode($cache);
+        }
         $token = $this->getAccessToken($userId);
         $response = $this->client->get("andRes?rollno=" . $username . "&sem=" . $sem, [
             'headers' => [
@@ -143,6 +167,7 @@ class AUMSRepository
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
+        $this->redis->setValue($username . ":andRes", json_encode($res));
         return $res;
     }
 

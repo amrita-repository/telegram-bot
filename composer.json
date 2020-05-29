@@ -7,6 +7,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "ext-curl": "*",
         "sunra/php-simple-html-dom-parser": "^1.5",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "predis/predis": "^1.1"
     }
 }

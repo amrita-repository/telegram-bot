@@ -15,6 +15,7 @@ require_once 'classes/Analytics.php';
 require_once 'classes/AUMS.php';
 require_once 'classes/AUMSRepository.php';
 require_once 'classes/Database.php';
+require_once 'classes/RedisUtils.php';
 date_default_timezone_set('Asia/Kolkata');
 
 Flight::route('/' . API_KEY, function () {

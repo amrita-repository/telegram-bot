@@ -17,7 +17,7 @@ class FacultyTimetable
             $bot->sendMessage($from, $reply, "markdown");
             return;
         } else if (sizeof(explode("_", $message)) < 2) {
-            $query = substr($message, 3, strlen($message));
+            $query = trim(substr($message, 3, strlen($message)));
             $bot->sendMessage($from, "Ok, your search query is " . $query);
             $options = self::getSearchResults($query);
             $reply = "";

@@ -25,7 +25,7 @@ class RedisUtils
      * @param $value
      * @param $expiry
      */
-    public function setValue($key, $value, $expiry = 3600)
+    public function setValue($key, $value, $expiry = 43200)
     {
         $this->instance->set($key, $value, "EX", $expiry);
     }

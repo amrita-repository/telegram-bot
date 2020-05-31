@@ -25,7 +25,7 @@ class AUMSRepository
     {
         $this->db = new Database();
         $this->client = new Client([
-            'base_uri' => "https://amritavidya.amrita.edu:8444/DataServices/rest/"
+            'base_uri' => "https://amritavidya.amrita.edu/DataServices/rest/"
         ]);
         $this->conn = $this->db->getConnection();
         $this->redis = new RedisUtils();
@@ -67,8 +67,7 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ],
-            'allow_redirects' => true
+            ]
         ]);
         return json_decode($response->getBody());
     }
@@ -92,8 +91,7 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ],
-            'allow_redirects' => true
+            ]
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
@@ -119,8 +117,7 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ],
-            'allow_redirects' => true
+            ]
         ]);
 
         $res = json_decode($response->getBody());
@@ -141,8 +138,7 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ],
-            'allow_redirects' => true
+            ]
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);
@@ -162,8 +158,7 @@ class AUMSRepository
             'headers' => [
                 'Authorization' => AUTHORIZATION,
                 'token' => $token
-            ],
-            'allow_redirects' => true
+            ]
         ]);
         $res = json_decode($response->getBody());
         $this->setAccessToken($userId, $res->Token);

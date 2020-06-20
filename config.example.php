@@ -14,3 +14,7 @@ define("DB_HOST", "127.0.0.1");
 define("DB_NAME", "amritarepo-bot");
 define("DB_PASSWORD", "");
 define("DB_USERNAME", "root");
+define("REDIS_HOST", "");
+define("REDIS_PORT", "");
+define("REDIS_PW", "");
+define("REDIS_DB", "");

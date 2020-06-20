@@ -16,7 +16,12 @@ class RedisUtils
     public function __construct()
     {
         if (empty($this->instance)) {
-            $this->instance = new Predis\Client();
+            $this->instance = new Predis\Client([
+              'host' => REDIS_HOST,
+              'port' => REDIS_PORT,
+              'password' => REDIS_PW,
+              'database' => REDIS_DB
+            ]);
         }
     }
 

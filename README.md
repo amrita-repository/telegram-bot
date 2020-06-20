@@ -17,10 +17,10 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 ```
 - Get into the `amritarepo-bot` directory.
 - Copy `config.example.php` and paste it as `config.php` and fill in necessary stuff.
-- Create `access.log` and `error.log` at the root of the project directory, with all permissions (`chmod 777 access.log error.log` on Linux).
+- Create `access.log` and `error.log` inside `logs` directory, with all permissions (`chmod 777 access.log error.log` on Linux).
 - Run a `composer install` to fetch all dependencies.
 - Run `php -S 0.0.0.0:2304` to start the web server.
-- Use an API testing tool like [Postman](https://postman.com) and send a POST request to `http://localhost:2304/<YOUR_BOT_TOKEN>` with the sample body 
+- Use an API testing tool like [Postman](https://postman.com) and send a POST request to `http://localhost:2304/<YOUR_BOT_TOKEN>` with the sample body
 ```json
 {
   "message" : {
@@ -33,7 +33,7 @@ git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
   }
 }
 ```
-##### Example 
+##### Example
 ![Postman](postman.png?raw=true)
 
 - If you get an error like `Chat not found`, it usually means that you have not **started** the bot from your personal Telegram account. Go to the bot and **START** it.

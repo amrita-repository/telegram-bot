@@ -17,7 +17,7 @@ class MainHandler
     {
         $smallerMessage = strtolower($message);
         if ($from != MASTER_ID)
-            file_put_contents("access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
+            file_put_contents("logs/access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
         $bot = new BotApi(API_KEY);
         try {
             global $startKeyWords;
@@ -44,8 +44,8 @@ class MainHandler
             } else if ($smallerMessage == "logs") {
                 if ($from == MASTER_ID) {
                     $keyboard = new InlineKeyboardMarkup([[
-                        ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/access.log"],
-                        ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/error.log"]
+                        ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/access.log"],
+                        ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/error.log"]
                     ]]);
                     $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, $keyboard);
                 } else {
@@ -66,7 +66,7 @@ class MainHandler
             }
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
-            file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
+            file_put_contents("logs/error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
             $bot->sendMessage(MASTER_ID, $exception->getMessage());
             $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
         }

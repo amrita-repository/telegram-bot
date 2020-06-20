@@ -38,7 +38,7 @@ class AcademicTimetable
                             $bot->sendDocument($from, self::getTimetableURL($msg));
                             $bot->sendMessage($from, "There you go! Check out your academic timetable !!");
                         } catch (\TelegramBot\Api\HttpException $exception) {
-                            file_put_contents("error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
+                            file_put_contents("logs/error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
                         }
                         return "";
                     default:

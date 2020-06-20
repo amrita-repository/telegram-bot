@@ -34,7 +34,7 @@ class Analytics
 
     private static function getUsersFrequency($count)
     {
-        $handle = fopen("access.log", "r");
+        $handle = fopen("logs/access.log", "r");
         if ($handle) {
             $map = [];
             while (($line = fgets($handle)) !== false) {
@@ -67,7 +67,7 @@ class Analytics
 
     private static function commonStats()
     {
-        $handle = fopen("access.log", "r");
+        $handle = fopen("logs/access.log", "r");
         if ($handle) {
             $totalCount = 0;
             $todayCount = 0;
@@ -112,7 +112,7 @@ class Analytics
 
     private static function messageStats()
     {
-        $handle = fopen("access.log", "r");
+        $handle = fopen("logs/access.log", "r");
         if ($handle) {
             $map = [];
             while (($line = fgets($handle)) !== false) {

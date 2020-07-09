@@ -27,10 +27,10 @@ class AcademicTimetable
                         $reply = self::getSemesters($msg);
                         break;
                     case 4:
-                        $reply = self::getSections($msg);
+                        $reply = self::getBranches($msg);
                         break;
                     case 5:
-                        $reply = self::getBranches($msg);
+                        $reply = self::getSections($msg);
                         break;
                     case 6:
                         $bot->sendMessage($from, "Please wait for a moment, while I search for the requested document :) \n`In case I dont respond, it means that the file has not yet been uploaded.`", "markdown");
@@ -91,9 +91,12 @@ class AcademicTimetable
 
     public static function getSections($prev)
     {
-        $sections = "Okay cool! Please be patient. Just one more! Choose your section : ";
+        $data = explode('_', $prev);
+        $msg = $data[0] . '_' . $data[1] . '_' . $data[2] . '_' . $data[3];
+        $branch = $data[4];
+        $sections = "Okay! Final question xD ! Which section do you belong to ?";
         for ($i = 'A'; $i <= 'F'; ++$i) {
-            $sections .= "\n\n Section " . $i . "   -  " . $prev . "_" . $i;
+            $sections .= "\n\n Section " . $i . "   -  " . $msg . "_" . $i . '_' . $branch;
         }
         return $sections;
     }
@@ -101,7 +104,7 @@ class AcademicTimetable
     private static function getBranches($msg)
     {
         $course = explode("_", $msg)[2];
-        $response = "Okay! Final question xD ! Which branch do you belong to ?";
+        $response = "Okay cool! Please be patient. Just one more! Choose your branch : ";
         $client = new Client();
         $res = $client->request('GET', 'https://intranet.cb.amrita.edu/TimeTable/funcTimeTable.php?func=drop_1&drop_var=' . $course);
         $dom = HtmlDomParser::str_get_html($res->getBody());

@@ -4,10 +4,10 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 > A non-modular, low-perf, no-ML, if-else telegram bot built with Flight PHP.
 
-[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot) ![Amrita Repository Bot CD](https://github.com/rajkumaar23/amritarepo-bot/workflows/Amrita%20Repository%20Bot%20CD/badge.svg)
+[![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot)
 
 ## Contributing
-- Make sure you have `PHP` and `composer` installed in your system.
+- Make sure you have `PHP > 7.0` and `composer` installed in your system.
 - Create a Telegram bot with the help of [Botfather](https://t.me/botfather) and then `start` the bot.
 - Know your own Telegram ID with the help of a bot like [this](https://t.me/chatid_echo_bot) one.
 - **Fork** this repository.

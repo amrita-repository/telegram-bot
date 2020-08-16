@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
@@ -10,15 +10,18 @@ use TelegramBot\Api\Types\ReplyKeyboardMarkup;
  */
 class Analytics
 {
-    static $regex = '/(\d+\/\d+\/\d+) (\d+:\d+:\d+) (am|pm) - (.+)\(@(.+)\) -> (.*)/m';
 
-    public static function handle($message, $from, $bot)
+    public static function handle($message, $from, $bot): ?string
     {
         switch ($message) {
             case "anly" :
-                $keyboard = new ReplyKeyboardMarkup([
-                    ["anly - Common Stats"], ["anly - Top 10 users"], ["anly - Message Stats"]
-                ], true);
+                $keyboard = new ReplyKeyboardMarkup(
+                    [
+                        ["anly - Common Stats"],
+                        ["anly - Top 10 users"],
+                        ["anly - Message Stats"]
+                    ], true
+                );
                 $bot->sendMessage($from, "What analytics do you want to see ?", null, false, null, $keyboard);
                 return "";
             case "anly - top 10 users" :
@@ -32,17 +35,35 @@ class Analytics
         }
     }
 
-    private static function getUsersFrequency($count)
+    private static function getConnection(): PDO
     {
-        $handle = fopen("logs/access.log", "r");
-        if ($handle) {
+        $DB_SERVER = ANALYTICS_DB_HOST;
+        $DB_NAME = ANALYTICS_DB_NAME;
+        $DB_PASS = ANALYTICS_DB_PASSWORD;
+        $DB_USER = ANALYTICS_DB_USERNAME;
+        $conn = new PDO("mysql:host=$DB_SERVER;dbname=$DB_NAME", $DB_USER, $DB_PASS);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        self::loadMigrations($conn);
+        return $conn;
+    }
+
+    public static function storeAnalyticsData($name, $username, $message): void
+    {
+        $query = self::getConnection()
+            ->prepare("INSERT INTO analytics(name, username, message) VALUES(?,?,?)");
+        $query->execute([$name, $username, $message]);
+    }
+
+    private static function getUsersFrequency($count): ?string
+    {
+        $query = self::getConnection()->query("SELECT * FROM analytics");
+        $result = $query->fetchAll();
+        if (!empty($result)) {
             $map = [];
-            while (($line = fgets($handle)) !== false) {
-                preg_match(self::$regex, $line, $match);
-                if (empty($match)) continue;
-                $name = $match[4];
-                $username = $match[5];
-                if ($username == MASTER_USERNAME) {
+            foreach ($result as $item) {
+                $name = $item['name'];
+                $username = $item['username'];
+                if ($username === MASTER_USERNAME) {
                     continue;
                 }
                 $key = $name . '(@' . $username . ')';
@@ -52,36 +73,36 @@ class Analytics
                     $map[$key] = 1;
                 }
             }
-            fclose($handle);
             $reply = "Here are the top 10 users of this bot\n\n";
             arsort($map);
-            if (!empty($count)) $map = array_slice($map, 0, min($count, sizeof($map)));
+            if (!empty($count)) {
+                $map = array_slice($map, 0, min($count, count($map)));
+            }
             foreach ($map as $key => $value) {
                 $reply .= ($key . " - " . $value . "\n");
             }
             return $reply;
-        } else {
-            return "Opening Access Log Failed";
         }
+
+        return "Opening Access Log Failed";
     }
 
-    private static function commonStats()
+    private static function commonStats(): string
     {
-        $handle = fopen("logs/access.log", "r");
-        if ($handle) {
+        $query = self::getConnection()->query("SELECT * FROM analytics");
+        $result = $query->fetchAll();
+        if (!empty($result)) {
             $totalCount = 0;
             $todayCount = 0;
             $todayUsersMap = [];
-            while (($line = fgets($handle)) !== false) {
-                preg_match(self::$regex, $line, $match);
-                if (empty($match)) continue;
-                $date = $match[1];
-                $name = $match[4];
-                $username = $match[5];
-                if ($username == MASTER_USERNAME) {
+            foreach ($result as $item) {
+                $date = $item['created_at'];
+                $name = $item['name'];
+                $username = $item['username'];
+                if ($username === MASTER_USERNAME) {
                     continue;
                 }
-                if ($date == date('d/m/Y')) {
+                if (explode(' ', $date)[0] === date('Y-m-d')) {
                     $todayCount++;
                     $key = $name . '(@' . $username . ')';
                     if (array_key_exists($key, $todayUsersMap)) {
@@ -92,7 +113,6 @@ class Analytics
                 }
                 $totalCount++;
             }
-            fclose($handle);
             $reply = "Here are some common stats of the bot\n\n";
             $reply .= "Total hits till date : $totalCount \n";
             $reply .= "Total hits today : $todayCount\n\n";
@@ -100,67 +120,95 @@ class Analytics
                 $reply .= "\nHere are the top 10 users for today\n\n";
                 arsort($todayUsersMap);
             }
-            $map = array_slice($todayUsersMap, 0, min(10, sizeof($todayUsersMap)));
+            $map = array_slice($todayUsersMap, 0, min(10, count($todayUsersMap)));
             foreach ($map as $key => $value) {
                 $reply .= ($key . " - " . $value . "\n");
             }
             return $reply;
-        } else {
-            return "Opening Access Log Failed";
         }
+
+        return "Opening Access Log Failed";
     }
 
-    private static function messageStats()
+    private static function messageStats(): ?string
     {
-        $handle = fopen("logs/access.log", "r");
-        if ($handle) {
+        $query = self::getConnection()->query("SELECT * FROM analytics");
+        $result = $query->fetchAll();
+        if (!empty($result)) {
             $map = [];
-            while (($line = fgets($handle)) !== false) {
-                preg_match(self::$regex, $line, $match);
-                if (empty($match)) continue;
-                $username = $match[5];
-                $msg = $match[6];
-                if ($username == MASTER_USERNAME) {
+            foreach ($result as $item) {
+                $username = $item['username'];
+                if ($username === MASTER_USERNAME) {
                     continue;
                 }
-                $key = self::extractFeature($msg);
+                $key = self::extractFeature($item['message']);
                 if (array_key_exists($key, $map)) {
                     $map[$key]++;
                 } else {
                     $map[$key] = 1;
                 }
             }
-            fclose($handle);
             $reply = "Here are the message stats\n\n";
             arsort($map);
             foreach ($map as $key => $value) {
                 $reply .= ($key . " - " . $value . "\n\n");
             }
             return $reply;
-        } else {
-            return "Opening Access Log Failed";
         }
+
+        return "Opening Access Log Failed";
     }
 
-    private static function extractFeature($message)
+    private static function extractFeature($message): string
     {
         global $startKeyWords;
         if (in_array(trim($message), $startKeyWords)) {
             return "▶️ Start";
-        } else if (strpos($message, "act") !== false) {
-            return "📅️ Academic Timetable";
-        } else if ((strpos($message, "qpapers") !== false) || (strpos($message, "qd") !== false)) {
-            return "📚️ QPapers";
-        } else if ((strpos($message, "ft") !== false)) {
-            return "👨‍🏫  Faculty Timetable";
-        } else if ((strpos($message, "news") !== false)) {
-            return "📰️ News";
-        } else if ((strpos($message, "ums") !== false)) {
-            return "💻️ AUMS";
-        } else if ((strpos($message, "thank") !== false)) {
-            return "🙏️ Thanks";
-        } else {
-            return "💩️ Human Language";
         }
+
+        if (strpos($message, "act") !== false) {
+            return "📅️ Academic Timetable";
+        }
+
+        if ((strpos($message, "qpapers") !== false) || (strpos($message, "qd") !== false)) {
+            return "📚️ QPapers";
+        }
+
+        if ((strpos($message, "ft") !== false)) {
+            return "👨‍🏫  Faculty Timetable";
+        }
+
+        if ((strpos($message, "news") !== false)) {
+            return "📰️ News";
+        }
+
+        if ((strpos($message, "ums") !== false)) {
+            return "💻️ AUMS";
+        }
+
+        if ((strpos($message, "thank") !== false)) {
+            return "🙏️ Thanks";
+        }
+
+        return "💩️ Human Language";
+    }
+
+    private static function loadMigrations($conn): void
+    {
+        $migrations = [
+            "CREATE TABLE IF NOT EXISTS `analytics` (
+                        `id` integer PRIMARY KEY AUTO_INCREMENT,
+                        `name` varchar(255) NOT NULL,
+                        `username` varchar(255) DEFAULT NULL,
+                        `message` text DEFAULT NULL,
+                        `created_at` DATETIME DEFAULT NOW()
+            );"
+        ];
+
+        $conn->beginTransaction();
+        foreach ($migrations as $migration) {
+            $conn->exec($migration);
+        }
+        $conn->commit();
     }
 }

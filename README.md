@@ -16,6 +16,7 @@
 git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 ```
 - Get into the `amritarepo-bot` directory.
+- Delete existing `config.php`
 - Copy `config.example.php` and paste it as `config.php` and fill in necessary stuff.
 - Create `access.log` and `error.log` inside `logs` directory, with all permissions (`chmod 777 access.log error.log` on Linux).
 - Run a `composer install` to fetch all dependencies.

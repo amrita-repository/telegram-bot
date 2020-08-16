@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
@@ -26,7 +26,7 @@ class Database
      * Connects to the database using PDO
      * @return PDO
      */
-    private function connect()
+    private function connect(): PDO
     {
         $conn = new PDO("mysql:host=$this->DB_SERVER;dbname=$this->DB_NAME", $this->DB_USER, $this->DB_PASS);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -53,7 +53,7 @@ class Database
      * Returns the created PDO connection
      * @return PDO
      */
-    public function getConnection()
+    public function getConnection(): PDO
     {
         return $this->connection;
     }

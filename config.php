@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
@@ -16,3 +16,7 @@ define("REDIS_HOST", getenv("REDIS_HOST"));
 define("REDIS_PORT", getenv("REDIS_PORT"));
 define("REDIS_PW", getenv("REDIS_PW"));
 define("REDIS_DB", getenv("REDIS_DB"));
+define("ANALYTICS_DB_HOST", getenv("ANALYTICS_DB_HOST"));
+define("ANALYTICS_DB_NAME", getenv("ANALYTICS_DB_NAME"));
+define("ANALYTICS_DB_PASSWORD", getenv("ANALYTICS_DB_PASSWORD"));
+define("ANALYTICS_DB_USERNAME", getenv("ANALYTICS_DB_USERNAME"));

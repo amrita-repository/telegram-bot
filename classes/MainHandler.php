@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
  */
 
@@ -16,13 +16,21 @@ class MainHandler
     public static function respond($message, $from, $name, $username)
     {
         $smallerMessage = strtolower($message);
-        if ($from != MASTER_ID)
-            file_put_contents("logs/access.log", date('d/m/Y h:i:s a', time()) . " - " . $name . "(@" . $username . ")" . " -> " . explode("\n", $message)[0] . "\n", FILE_APPEND | LOCK_EX);
+        if ($from != MASTER_ID && SHOULD_PROXY) {
+            Analytics::storeAnalyticsData($name, $username??'', $message);
+        }
         $bot = new BotApi(API_KEY);
         try {
             global $startKeyWords;
             if (in_array(trim($smallerMessage), $startKeyWords)) {
-                $keyboard = new InlineKeyboardMarkup([[['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'], ['text' => 'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']]]);
+                $keyboard = new InlineKeyboardMarkup(
+                    [
+                        [
+                            ['text' => 'About my Master', 'url' => 'http://rajkumaar.co.in'],
+                            ['text' => 'Source Code', 'url' => 'https://github.com/rajkumaar23/amritarepo-bot']
+                        ]
+                    ]
+                );
                 if ($smallerMessage == "start" || $smallerMessage == "/start") {
                     $reply = self::getStartText($from, $name, $bot, true);
                 } else {
@@ -39,17 +47,24 @@ class MainHandler
                 AUMS::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "ft") !== false)) {
                 FacultyTimetable::handle($smallerMessage, $from, $bot);
-            } else if ((strpos($smallerMessage, "news") !== false)) {
+            } elseif ((strpos($smallerMessage, "news") !== false)) {
                 News::handle($from, $smallerMessage, $bot);
-            } else if ($smallerMessage == "logs") {
+            } elseif ($smallerMessage === "logs") {
                 if ($from == MASTER_ID) {
-                    $keyboard = new InlineKeyboardMarkup([[
-                        ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/access.log"],
-                        ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/error.log"]
-                    ]]);
+                    $keyboard = new InlineKeyboardMarkup(
+                        [
+                            [
+                                ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/access.log"],
+                                ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/error.log"]
+                            ]
+                        ]
+                    );
                     $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, $keyboard);
                 } else {
-                    $bot->sendMessage($from, "Haha, Nice try! I can share the logs only with my master, @rajkumaar23 ^_^");
+                    $bot->sendMessage(
+                        $from,
+                        "Haha, Nice try! I can share the logs only with my master, @rajkumaar23 ^_^"
+                    );
                 }
                 return;
             } else if (strpos($smallerMessage, "anly") !== false && $from == MASTER_ID) {

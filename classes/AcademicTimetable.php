@@ -126,7 +126,7 @@ class AcademicTimetable
         $url .= "/" . substr($data[1], 0, 4) . "_" . substr($data[1], 4, 6);
         $url .= "/" . $data[2];
         $url .= "/" . $data[5];
-        $url .= "/" . $data[2] . $data[5] . $data[4] . $data[3] . ".jpg";
+        $url .= "/" . $data[2] . $data[5] . $data[4] . $data[3] . ".pdf";
         return $url;
     }
 }

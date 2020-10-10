@@ -25,7 +25,8 @@ class AUMSRepository
     {
         $this->db = new Database();
         $this->client = new Client([
-            'base_uri' => "https://aumscb.amrita.edu/DataServices/rest/"
+            'base_uri' => "https://aumscb.amrita.edu/DataServices/rest/",
+            'verify' => false
         ]);
         $this->conn = $this->db->getConnection();
         $this->redis = new RedisUtils();

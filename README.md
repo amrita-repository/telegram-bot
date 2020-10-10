@@ -7,7 +7,7 @@
 [![Bot Link](https://img.shields.io/badge/Telegram-@amrepobot-informational)](https://t.me/amrepobot)
 
 ## Contributing
-- Make sure you have `PHP > 7.0` and `composer` installed in your system.
+- Make sure you have `PHP = v7.3.x` and `composer` installed in your system.
 - Create a Telegram bot with the help of [Botfather](https://t.me/botfather) and then `start` the bot.
 - Know your own Telegram ID with the help of a bot like [this](https://t.me/chatid_echo_bot) one.
 - **Fork** this repository.
@@ -16,11 +16,9 @@
 git clone https://github.com/<YOUR_USERNAME>/amritarepo-bot.git
 ```
 - Get into the `amritarepo-bot` directory.
-- Delete existing `config.php`
-- Copy `config.example.php` and paste it as `config.php` and fill in necessary stuff.
-- Create `access.log` and `error.log` inside `logs` directory, with all permissions (`chmod 777 access.log error.log` on Linux).
+- Copy `.env.example` and paste it as `.env` and fill in necessary credentials.
 - Run a `composer install` to fetch all dependencies.
-- Run `php -S 0.0.0.0:2304` to start the web server.
+- Run `composer start` to start the web server.
 - Use an API testing tool like [Postman](https://postman.com) and send a POST request to `http://localhost:2304/<YOUR_BOT_TOKEN>` with the sample body
 ```json
 {

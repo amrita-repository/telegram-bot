@@ -86,7 +86,7 @@ class AUMS
             }
         } catch(\Exception $exception){
             $bot->sendMessage($from, "Something went wrong while connecting to AUMS server. Please try again later");
-            file_put_contents("logs/error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
+            Logger::error($exception->getMessage() . "\n" . $exception->getTraceAsString());
         }
     }
 }

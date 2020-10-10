@@ -202,9 +202,7 @@ class QPapers
             unlink('docs/' . $title . '.pdf');
         } catch (Exception $exception) {
             $bot->sendMessage($from, "Uh-Oh, Something went wrong!! Sorry about that. Reported to @rajkumaar23 👍&#x1f44d;", "html");
-            file_put_contents("logs/error.log", date('d/m/Y h:i:s a', time()) . "  -  " . $exception->getMessage() . "\n" . $exception->getTraceAsString() . "\n\n\n\n\n", FILE_APPEND | LOCK_EX);
-            $bot->sendMessage(MASTER_ID, $exception->getMessage());
-            $bot->sendMessage(MASTER_ID, $exception->getTraceAsString());
+            Logger::error($exception->getMessage() . "\n" . $exception->getTraceAsString());
         }
     }
 }

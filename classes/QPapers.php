@@ -4,7 +4,7 @@
  */
 
 use GuzzleHttp\Client;
-use Sunra\PhpSimple\HtmlDomParser;
+use voku\helper\HtmlDomParser;
 
 class QPapers
 {
@@ -58,7 +58,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $semesters = $dom->find('ul', 2)->getElementsByTagName('li');
         $result = "Okay which semester are you currently in ? ";
         foreach ($semesters as $item) {
@@ -83,7 +83,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $semesters = $dom->find('ul', 3)->getElementsByTagName('li');
         $result = "";
         $i = 1;
@@ -117,7 +117,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
         $url = "http://dspace.amritanet.edu:8080" . $nextURL;
         if (!SHOULD_PROXY) {
@@ -129,7 +129,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $links = $dom->find('div.file-link');
         $titles = $dom->find('div.file-metadata');
         $result = "";
@@ -159,7 +159,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
         $url = "http://dspace.amritanet.edu:8080" . $nextURL;
         if (!SHOULD_PROXY) {
@@ -171,7 +171,7 @@ class QPapers
                 ]
             ]);
         }
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $links = $dom->find('div.file-link');
         $links_array = [];
         for ($i = 0; $i < sizeof($links); ++$i) {
@@ -196,7 +196,7 @@ class QPapers
         }
         try {
             $title = urldecode(explode("_", basename($links_array[$subject - 1]))[0]);
-            file_put_contents('docs/' . $title . '.pdf', $response->getBody());
+            file_put_contents('docs/' . $title . '.pdf', $response->getBody()->__toString());
             $bot->sendDocument($from, new CURLFile('docs/' . $title . '.pdf'));
             $bot->sendMessage($from, "There you go! All the best ^_^");
             unlink('docs/' . $title . '.pdf');

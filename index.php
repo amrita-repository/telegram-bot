@@ -12,7 +12,7 @@ if (is_file(__DIR__ . '/.env')) {
 
 use Rollbar\Rollbar;
 
-if (!empty(ROLLBAR_TOKEN)) {
+if (!empty($_ENV["ROLLBAR_TOKEN"])) {
     Rollbar::init(
         array(
             'access_token' => $_ENV["ROLLBAR_TOKEN"],

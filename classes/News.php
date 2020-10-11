@@ -4,7 +4,7 @@
  */
 
 use GuzzleHttp\Client;
-use Sunra\PhpSimple\HtmlDomParser;
+use voku\helper\HtmlDomParser;
 use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;
 
 class News
@@ -29,7 +29,7 @@ class News
     {
         $client = new Client();
         $res = $client->get("https://www.amrita.edu/campus/Coimbatore/news");
-        $dom = HtmlDomParser::str_get_html($res->getBody());
+        $dom = HtmlDomParser::str_get_html($res->getBody()->__toString());
         $articles = $dom->find("article");
         $news_col = array();
         foreach ($articles as $article) {
@@ -46,7 +46,7 @@ class News
     {
         $result = "";
         $result .= "<strong>" . $news->getTitle() . "</strong>\n\n";
-        $result .= $news->getBody() . "\n\n";
+        $result .= $news->getBody()->__toString() . "\n\n";
         return $result;
     }
 }

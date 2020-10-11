@@ -4,7 +4,7 @@
  */
 
 use GuzzleHttp\Client;
-use Sunra\PhpSimple\HtmlDomParser;
+use voku\helper\HtmlDomParser;
 
 class FacultyTimetable
 {
@@ -51,7 +51,7 @@ class FacultyTimetable
         $ajaxURL = "https://intranet.cb.amrita.edu/TimeTable/Faculty/get_staff_list.php?q=" . $query;
         $client = new Client();
         $response = $client->get($ajaxURL);
-        return (empty(trim($response->getBody())) ? "" : explode("\n", $response->getBody()));
+        return (empty(trim($response->getBody()->__toString())) ? "" : explode("\n", $response->getBody()->__toString()));
     }
 
     public static function getYears($prev)
@@ -96,7 +96,7 @@ class FacultyTimetable
         $response = $client->request("post", "https://intranet.cb.amrita.edu/TimeTable/Faculty/index.php", [
             'form_params' => $data,
         ]);
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         try {
             $filename = $dom->getElementsByTagName("iframe", 0)->src;
             $doc = "https://intranet.cb.amrita.edu/TimeTable/Faculty/" . $filename;

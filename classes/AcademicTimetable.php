@@ -4,7 +4,7 @@
  */
 
 use GuzzleHttp\Client;
-use Sunra\PhpSimple\HtmlDomParser;
+use voku\helper\HtmlDomParser;
 
 /**
  * Copyright (c) 2020 | RAJKUMAR (http://rajkumaar.co.in)
@@ -65,7 +65,7 @@ class AcademicTimetable
     {
         $client = new Client();
         $response = $client->request('GET', 'https://intranet.cb.amrita.edu/TimeTable');
-        $dom = HtmlDomParser::str_get_html($response->getBody());
+        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $courseList = $dom->getElementById('drop_1');
         $courseItems = $courseList->getElementsByTagName('option');
         $courses = "Please choose your course from the options below :";
@@ -107,7 +107,7 @@ class AcademicTimetable
         $response = "Okay cool! Please be patient. Just one more! Choose your branch : ";
         $client = new Client();
         $res = $client->request('GET', 'https://intranet.cb.amrita.edu/TimeTable/funcTimeTable.php?func=drop_1&drop_var=' . $course);
-        $dom = HtmlDomParser::str_get_html($res->getBody());
+        $dom = HtmlDomParser::str_get_html($res->getBody()->__toString());
         $branchList = $dom->getElementById('drop_2');
         $branches = $branchList->getElementsByTagName('option');
         $i = 1;

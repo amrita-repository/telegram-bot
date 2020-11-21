@@ -47,8 +47,6 @@ class MainHandler
                 AUMS::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "ft") !== false)) {
                 FacultyTimetable::handle($smallerMessage, $from, $bot);
-            } elseif ((strpos($smallerMessage, "news") !== false)) {
-                News::handle($from, $smallerMessage, $bot);
             } elseif ($smallerMessage === "logs") {
                 if ($from == MASTER_ID) {
                     $keyboard = new InlineKeyboardMarkup(

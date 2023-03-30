@@ -3,7 +3,7 @@
         "start" : "php -S 0.0.0.0:2304"
     },
     "require": {
-        "php": "7.3.*",
+        "php": "7.4.*",
         "telegram-bot/api": "^2.3",
         "irazasyed/telegram-bot-sdk": "^2.0",
         "ext-json": "*",

@@ -7,6 +7,7 @@ define("API_KEY", $_ENV["API_KEY"]);
 define("MASTER_ID", $_ENV["MASTER_ID"]);
 define("MASTER_USERNAME", $_ENV["MASTER_USERNAME"]);
 define("HASH", $_ENV["HASH"]);
+define("PROXY_URL", $_ENV["PROXY_URL"]);
 define("SHOULD_PROXY", $_ENV["SHOULD_PROXY"]);
 define("DB_HOST", $_ENV["DB_HOST"]);
 define("DB_NAME", $_ENV["DB_NAME"]);

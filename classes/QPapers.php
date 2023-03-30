@@ -52,7 +52,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -77,7 +77,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -111,7 +111,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -123,7 +123,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -153,7 +153,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -165,7 +165,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]
@@ -188,7 +188,7 @@ class QPapers
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
-            $response = $client->post('http://dev.rajkumaar.co.in/proxy.php', [
+            $response = $client->post(PROXY_URL, [
                 'form_params' => [
                     'data' => $url, 'hash' => HASH
                 ]

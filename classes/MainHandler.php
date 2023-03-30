@@ -36,7 +36,7 @@ class MainHandler
                 } else {
                     $reply = self::getStartText($from, $name, $bot);
                 }
-                $bot->sendMessage($from, $reply, "markdown", false, null, null, $keyboard);
+                $bot->sendMessage($from, $reply, "markdown");
                 return;
             } else if (strpos($smallerMessage, "act") !== false) {
                 $reply = AcademicTimetable::handle($bot, $from, $message);
@@ -47,24 +47,6 @@ class MainHandler
                 AUMS::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "ft") !== false)) {
                 FacultyTimetable::handle($smallerMessage, $from, $bot);
-            } elseif ($smallerMessage === "logs") {
-                if ($from == MASTER_ID) {
-                    $keyboard = new InlineKeyboardMarkup(
-                        [
-                            [
-                                ['text' => 'Access', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/access.log"],
-                                ['text' => 'Errors', 'url' => "http://" . $_SERVER['HTTP_HOST'] . "/logs/error.log"]
-                            ]
-                        ]
-                    );
-                    $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, null, $keyboard);
-                } else {
-                    $bot->sendMessage(
-                        $from,
-                        "Haha, Nice try! I can share the logs only with my master, @rajkumaar23 ^_^"
-                    );
-                }
-                return;
             } else if (strpos($smallerMessage, "anly") !== false && $from == MASTER_ID) {
                 $reply = Analytics::handle($smallerMessage, $from, $bot);
             } else if ((strpos($smallerMessage, "thank") !== false)) {

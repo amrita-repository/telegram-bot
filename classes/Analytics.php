@@ -15,14 +15,7 @@ class Analytics
     {
         switch ($message) {
             case "anly" :
-                $keyboard = new ReplyKeyboardMarkup(
-                    [
-                        ["anly - Common Stats"],
-                        ["anly - Top 10 users"],
-                        ["anly - Message Stats"]
-                    ], true
-                );
-                $bot->sendMessage($from, "What analytics do you want to see ?", null, false, null, null, $keyboard);
+                $bot->sendMessage($from, "What analytics do you want to see ?\n`anly - Common Stats`\n`anly - Top 10 users`\n`anly - Message Stats`", "markdown");
                 return "";
             case "anly - top 10 users" :
                 return self::getUsersFrequency(10);

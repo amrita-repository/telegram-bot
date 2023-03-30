@@ -22,7 +22,7 @@ class Analytics
                         ["anly - Message Stats"]
                     ], true
                 );
-                $bot->sendMessage($from, "What analytics do you want to see ?", null, false, null, $keyboard);
+                $bot->sendMessage($from, "What analytics do you want to see ?", null, false, null, null, $keyboard);
                 return "";
             case "anly - top 10 users" :
                 return self::getUsersFrequency(10);

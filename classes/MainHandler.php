@@ -36,7 +36,7 @@ class MainHandler
                 } else {
                     $reply = self::getStartText($from, $name, $bot);
                 }
-                $bot->sendMessage($from, $reply, "markdown", false, null, $keyboard);
+                $bot->sendMessage($from, $reply, "markdown", false, null, null, $keyboard);
                 return;
             } else if (strpos($smallerMessage, "act") !== false) {
                 $reply = AcademicTimetable::handle($bot, $from, $message);
@@ -57,7 +57,7 @@ class MainHandler
                             ]
                         ]
                     );
-                    $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, $keyboard);
+                    $bot->sendMessage($from, "May the logs be with you, master! ❤", "markdown", false, null, null, $keyboard);
                 } else {
                     $bot->sendMessage(
                         $from,

@@ -14,12 +14,12 @@ class News
         if ($message == "allnews" || $message == "/allnews") {
             foreach (self::getNews(true) as $news) {
                 $keyboard = new InlineKeyboardMarkup([[['text' => 'Read more', 'url' => $news->getLink()]]]);
-                $bot->sendMessage($from, self::toString($news), "html", false, null, $keyboard);
+                $bot->sendMessage($from, self::toString($news), "html", false, null, null, $keyboard);
             }
         } else if ($message == "/randnews" || $message == "randnews" || strpos($message, "random") !== false) {
             $news = self::getNews();
             $keyboard = new InlineKeyboardMarkup([[['text' => 'Read more', 'url' => $news->getLink()]]]);
-            $bot->sendMessage($from, self::toString($news), "html", false, null, $keyboard);
+            $bot->sendMessage($from, self::toString($news), "html", false, null, null, $keyboard);
         } else {
             $bot->sendMessage($from, "Wanted news capsules regarding Amrita ? Right, choose an option.\n\n1) /allnews - Get all the articles at once (<strong>SPAM ALERT !!</strong>)\n\n2) /randnews - Get a random article", "html");
         }

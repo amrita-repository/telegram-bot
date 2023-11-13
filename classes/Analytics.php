@@ -202,6 +202,8 @@ class Analytics
         foreach ($migrations as $migration) {
             $conn->exec($migration);
         }
-        $conn->commit();
+        if ($conn->inTransaction()) {
+            $conn->commit();
+        }
     }
 }

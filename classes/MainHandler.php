@@ -78,7 +78,6 @@ class MainHandler
         $start .= "\n\n📝   /qpapersc - Question papers ";
         $start .= "\n\n💻️   /ums - AUMS ";
         $start .= "\n\n👨‍🏫   /ft - Faculty Timetable ";
-        $start .= "\n\n📰   /news - News capsules ";
         $start .= "\n\nDeveloped with ❤ by @rajkumaar23";
         $start .= "\n\n*If you want me to display this menu anytime later, just send me a hi or hello*.";
         return $start;

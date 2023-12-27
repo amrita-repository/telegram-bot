@@ -37,6 +37,10 @@ require_once 'classes/Logger.php';
 
 date_default_timezone_set('Asia/Kolkata');
 
+Flight::route('/healthcheck', function () {
+    echo 'OK';
+});
+
 Flight::route('/' . API_KEY, function () {
     $data = json_decode(file_get_contents('php://input'));
     $message = $data->message->text;
@@ -45,4 +49,5 @@ Flight::route('/' . API_KEY, function () {
     $username = isset($data->message->from->username) ? $data->message->from->username : "NA";
     MainHandler::respond($message, $from, $name, $username);
 });
+
 Flight::start();

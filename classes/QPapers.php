@@ -143,18 +143,6 @@ class QPapers
             ]);
         }
         $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
-        $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
-        $url = "http://dspace.amritanet.edu:8080" . $nextURL;
-        if (!SHOULD_PROXY) {
-            $response = $client->get($url);
-        } else {
-            $response = $client->post(PROXY_URL, [
-                'form_params' => [
-                    'data' => $url, 'hash' => HASH
-                ]
-            ]);
-        }
-        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
         $links = $dom->find('div.file-link');
         $links_array = [];
         for ($i = 0; $i < sizeof($links); ++$i) {

@@ -89,11 +89,6 @@ class QPapers
         $i = 1;
         foreach ($semesters as $item) {
             $title = trim($item->find('a[href]', 0)->text());
-            $array = explode(" ", $title);
-            unset($array[0]);
-            unset($array[1]);
-            $array = array_values($array);
-            $title = implode(" ", $array);
             $result .= "\n\n\n" . $i . ") " . $title . " (";
             $total = sizeof(explode("/", $item->find('a[href]', 0)->href));
             $result .= "/qpapersub" . "_" . explode("/", $item->find('a[href]', 0)->href)[$total - 1] . ")";
@@ -107,19 +102,6 @@ class QPapers
     {
         $ass = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
-        $client = new Client();
-        if (!SHOULD_PROXY) {
-            $response = $client->get($url);
-        } else {
-            $response = $client->post(PROXY_URL, [
-                'form_params' => [
-                    'data' => $url, 'hash' => HASH
-                ]
-            ]);
-        }
-        $dom = HtmlDomParser::str_get_html($response->getBody()->__toString());
-        $nextURL = $dom->find('ul', 2)->find('li', 0)->find('a[href]', 0)->href;
-        $url = "http://dspace.amritanet.edu:8080" . $nextURL;
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {

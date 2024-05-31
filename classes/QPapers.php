@@ -102,6 +102,7 @@ class QPapers
     {
         $ass = explode("_", $msg)[1];
         $url = "http://dspace.amritanet.edu:8080/xmlui/handle/123456789/" . $ass;
+        $client = new Client();
         if (!SHOULD_PROXY) {
             $response = $client->get($url);
         } else {
